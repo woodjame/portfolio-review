@@ -251,6 +251,40 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
 .keyhelp { font-size: 13px; }
 .keyhelp summary { font-size: 13px; }
 .keyhelp ol { margin: 6px 0; padding-left: 18px; }
+.rules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 10px; }
+.rules-grid > div { background: var(--bg); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font-size: 13.5px; }
+.rules-grid b { font-family: var(--font-display); font-size: 15px; }
+.iv-inputs { display: flex; flex-direction: column; gap: 14px; }
+.iv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.iv-card { border-radius: 14px; padding: 14px; background: var(--cs, var(--bg)); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.iv-card h3 { display: flex; align-items: center; gap: 8px; }
+.iv-card .n { width: 24px; height: 28px; display: inline-grid; place-items: center; background: var(--c); color: #fff; font-family: var(--font-mono); font-size: 12px; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.iv-card textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--sheet); font: 14px/1.5 var(--font-body); color: var(--ink); resize: vertical; }
+.iv-card video { width: 100%; border-radius: 8px; background: #000; max-height: 220px; }
+.filebtn { cursor: pointer; color: var(--accent) !important; }
+.num-in { width: 80px; border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; background: var(--bg); }
+.iv-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.timebar { position: relative; height: 12px; background: var(--line); border-radius: 6px; overflow: hidden; margin-top: 6px; }
+.timebar i { position: absolute; inset: 0 auto 0 0; background: var(--teal); border-radius: 6px; }
+.timebar i.over { background: var(--miss); }
+.timebar .mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
+.dims { display: flex; flex-direction: column; gap: 0; }
+.dim { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); }
+.dim:first-child { border-top: 0; }
+.dim p { font-size: 14px; }
+.dim .sug { margin-top: 4px; padding: 6px 10px; border-left: 3px solid var(--honey); background: var(--honey-soft); border-radius: 0 8px 8px 0; }
+.ros { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ros th, .ros td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ros th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.ros td.t { font-family: var(--font-mono); white-space: nowrap; }
+.frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.frames figure { margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.frames img { width: 100%; border-radius: 8px; border: 1px solid var(--line); }
+.qcard { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; }
+.qcard:first-of-type { border-top: 0; padding-top: 0; }
+.qcard .q { font-weight: 600; font-size: 15px; }
+.qcard textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--bg); font: 14px/1.5 var(--font-body); color: var(--ink); resize: vertical; }
+.qfb { background: var(--bg); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -343,12 +377,66 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
       <button class="tab" role="tab" id="t-sections" aria-selected="false" data-v="sections">Sections<span class="count" id="c-sections"></span></button>
       <button class="tab" role="tab" id="t-pages" aria-selected="false" data-v="pages">Pages<span class="count" id="c-pages"></span></button>
       <button class="tab" role="tab" id="t-awards" aria-selected="false" data-v="awards">Awards<span class="count">8</span></button>
+      <button class="tab" role="tab" id="t-interview" aria-selected="false" data-v="interview">Interview prep<span class="count" id="c-interview"></span></button>
     </div>
     <section class="view on" id="v-overview"></section>
     <section class="view" id="v-rules"></section>
     <section class="view" id="v-sections"></section>
     <section class="view" id="v-pages"></section>
     <section class="view" id="v-awards"></section>
+    <section class="view" id="v-interview">
+      <div class="panel banner"><img src="img/awards.webp" alt="" aria-hidden="true"><div><h2>Judging interview prep</h2><p class="muted">Get feedback on your prepared presentation from your talking points, a practice video, or both. Then practise answering the questions judges are likely to ask. Your portfolio review, if you've run one, is used to aim the feedback at your gaps and target awards.</p></div></div>
+
+      <div class="panel">
+        <h2>How the judging interview works</h2>
+        <div class="rules-grid">
+          <div><b>10+ minutes</b><span>Every team gets the same Initial Interview length, at least 10 minutes (A205). The timer starts when your team starts (A206).</span></div>
+          <div><b>About 5 minutes to present</b><span>The first 5 minutes are yours to present without interruption. You can stop early; the rest is judge-led Q&amp;A (A207).</span></div>
+          <div><b>2 Question Bank questions</b><span>Q&amp;A opens with two questions the Judge Advisor picks from the Judge Interview Question Bank: one Machine, Creativity &amp; Innovation and one Team Attributes. Review the official bank before your event.</span></div>
+          <div><b>At least 2 students</b><span>Teams of 2+ need at least 2 student representatives. As many students as possible is encouraged (A204). Inspire looks for every member contributing.</span></div>
+          <div><b>Bring</b><span>A copy of your portfolio, plus show-and-tell items such as the robot, prototypes or outreach materials. You may power on and demo the robot if it doesn't cause long delays (A204).</span></div>
+          <div><b>Adults stay silent</b><span>One adult silent observer may attend but can't coach or speak (A208). No photos, video or audio recording during the interview (A210), so record practice runs only.</span></div>
+          <div><b>Pit interviews later</b><span>Judges may follow up in your pit. No new presentation is needed; have prototypes, design artifacts and outreach photos ready to show (6.1.3).</span></div>
+          <div><b>Interview fills portfolio gaps</b><span>Connect, Reach, Sustain, Innovate and Design don't require a portfolio, so the interview carries extra weight there. Only this season counts, and match scores and rankings aren't considered.</span></div>
+        </div>
+      </div>
+
+      <div class="panel iv-inputs">
+        <h2>Get feedback on your presentation</h2>
+        <div class="iv-grid">
+          <div class="iv-card c-think">
+            <h3><span class="n">1</span> Talking points or script</h3>
+            <label class="fine" for="ivText">Paste your outline or script. Put speaker names at the start of lines (e.g. <code>Maya: …</code>) to check that everyone speaks.</label>
+            <textarea id="ivText" rows="9" placeholder="Maya: Hi judges, we're team 12345…&#10;Leo: Our robot uses…"></textarea>
+            <label class="btn btn-quiet filebtn" for="ivTextFile">Or upload .txt, .md, .pdf or .docx</label>
+            <input type="file" id="ivTextFile" accept=".txt,.md,.pdf,.docx,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+            <span class="fine" id="ivTextInfo"></span>
+          </div>
+          <div class="iv-card c-mci">
+            <h3><span class="n">2</span> Practice video (optional)</h3>
+            <label class="btn btn-quiet filebtn" for="ivVideo">Choose a video (.mp4, .mov, .webm)</label>
+            <input type="file" id="ivVideo" accept="video/*" hidden>
+            <video id="ivPreview" controls playsinline hidden></video>
+            <span class="fine" id="ivVideoInfo">Your video never leaves this computer. The page takes still frames to check body language, who's on camera, and use of the robot and props, and sends only those frames.</span>
+            <p class="fine">If a video won't load, export it as MP4 (H.264). Record a practice run only; recording the real interview isn't allowed.</p>
+          </div>
+          <div class="iv-card c-ta">
+            <h3><span class="n">3</span> Transcript of the video (optional)</h3>
+            <label class="fine" for="ivTranscript">For feedback on what you said, how fast, and filler words, paste a transcript. Free ways to get one: your phone's voice recorder with transcription, Microsoft Word <b>Dictate → Transcribe</b>, or an unlisted YouTube upload's captions.</label>
+            <textarea id="ivTranscript" rows="7" placeholder="Maya: Hi judges…"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <label class="fine" for="ivStudents">Students presenting</label>
+          <input type="number" id="ivStudents" min="1" max="15" value="" placeholder="e.g. 4" class="num-in">
+          <button class="btn primary" id="ivRun" type="button">Get interview feedback</button>
+          <span class="fine" id="ivStatus"></span>
+        </div>
+      </div>
+
+      <div id="ivResults"></div>
+      <div id="ivQuestions"></div>
+    </section>
   </main>
 </div>
 
@@ -361,6 +449,7 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
         <li><b>Sent only to Claude, only for your review.</b> Page images and text are sent to Claude (Anthropic) to write your feedback, then sent straight back to you. On the website version they go straight from your browser to Anthropic using your team's own API key; they never pass through any Largo Robotics server.</li>
         <li><b>No other team can see it.</b> There is no shared folder, list, or gallery. Every review is separate, and no one, including Largo Robotics, can browse submitted portfolios or feedback.</li>
         <li><b>Anthropic's API terms.</b> Under Anthropic's commercial API terms, inputs and outputs are not used to train models, and they are deleted after a short retention period.</li>
+        <li><b>Practice videos stay on your computer.</b> The page takes a few still frames from your video and sends only those, plus any talking points or transcript you add, to Claude for feedback.</li>
         <li><b>On your computer.</b> Your last review and API key are saved in this browser only if you tick "Save my last review on this computer". "Clear my review" removes them at any time.</li>
         <li><b>Protect student privacy.</b> Use first names and last initials only, as rule A201 asks.</li>
       </ul>
@@ -1057,7 +1146,7 @@ async function run() {
     if (secRes.status === "fulfilled") state.sections = normaliseSections(secRes.value);
     stepState("awards", "done"); bar(1);
     renderAll();
-    if (remembering()) store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
+    if (remembering()) { store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) }); saveIfRemembering(); }
     $("#exportRow").hidden = false;
     const notes = [];
     if (failed.length) notes.push(`Pages ${failed.join(", ")} couldn't be reviewed individually, but their text was still used for scoring.`);
@@ -1080,7 +1169,7 @@ async function run() {
 }
 
 /* ---------- rendering ---------- */
-function renderAll() { renderOverview(); renderRules(); renderSections(); renderPages(); renderAwards(); }
+function renderAll() { renderOverview(); renderRules(); renderSections(); renderPages(); renderAwards(); if (typeof renderInterview === "function") renderInterview(); }
 const awardOf = id => state.report ? state.report.awards.find(x => x.id === id) : null;
 function scorePips(n, big) {
   if (!n) return `<span class="pips${big ? " big" : ""}" aria-label="Not scored">${[1,2,3,4,5].map(() => "<i></i>").join("")}</span>`;
@@ -1292,6 +1381,379 @@ function renderAwards() {
   v.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => { state.awardFilter = b.dataset.f; renderAwards(); }));
 }
 
+/* ============================================================
+   Interview prep: talking points, practice video (frames only), transcript, practice Q&A
+   ============================================================ */
+const IV_DIMS = [
+  { id: "timing", name: "Timing & structure", desc: "Fits about 5 minutes; clear opening, logical flow, strong close, smooth hand-offs." },
+  { id: "coverage", name: "Award coverage", desc: "Covers Machine/Creativity/Innovation, Team Attributes and Think, leans into target awards, and fills gaps the portfolio leaves." },
+  { id: "evidence", name: "Evidence & specifics", desc: "Numbers, named mechanisms, sensors, partners and results from this season, not general claims." },
+  { id: "team", name: "Whole-team participation", desc: "Several students speak with balanced, purposeful roles; every member's contribution is visible." },
+  { id: "delivery", name: "Delivery", desc: "Pace, clarity, eye contact, energy, few filler words, good use of the robot and props. Needs a video or transcript." },
+  { id: "readiness", name: "Q&A readiness", desc: "Leaves hooks for judges' questions and is ready for the two Question Bank questions." }
+];
+const iv = { text: "", textName: "", video: null, videoUrl: "", duration: null, frames: [], result: null, questions: [], answers: {}, feedback: {}, running: false };
+const INTERVIEW_RULES = `Judging interview format (FIRST Tech Challenge Competition Manual TU06, Section 6.1.2 and rules A203–A210):
+- The Initial Interview is at least 10 minutes, the same for every team (A205).
+- Teams may present uninterrupted for up to about 5 minutes (A207); the rest is a Q&A led by judges.
+- Q&A starts with two questions the Judge Advisor chooses from the Judge Interview Question Bank: one Machine, Creativity & Innovation (MCI) and one Team Attributes (TA). Judges may then ask anything relevant to the award criteria.
+- At least 2 student representatives for teams of 2+; as many students as possible is encouraged (A204). Bring a portfolio copy and show-and-tell items; the robot may be demoed without long delays.
+- One adult silent observer, no coaching (A208). No recording during the interview (A210).
+- Judges may follow up with pit interviews; no new presentation needed.
+- Judges consider only this season (since Jan 1, 2026) and the published award criteria; match scores and rankings are not considered unless a criterion names performance.
+- Connect, Reach, Sustain, Innovate and Design do not require a portfolio, so the interview carries extra weight. Inspire 3 (positive, inclusive, every member contributes) and Inspire 4 (able to share experiences and knowledge with judges) are shown in the interview.`;
+
+const fmtTime = s => { if (!Number.isFinite(s)) return "–"; const m = Math.floor(s / 60), r = Math.round(s % 60); return `${m}:${String(r).padStart(2, "0")}`; };
+
+/* ---------- local speech statistics (no AI) ---------- */
+function speechStats(text, durationSec) {
+  const t = String(text || "");
+  const words = t.match(/[A-Za-z0-9'’-]+/g) || [];
+  const fillers = {};
+  const rx = /\b(um+|uh+|erm+|uhm+|you know|basically|literally|kind of|sort of)\b/gi;
+  let m; while ((m = rx.exec(t))) { const k = m[1].toLowerCase().replace(/^u+m+$|^uhm+$/, "um").replace(/^u+h+$/, "uh").replace(/^erm+$/, "erm"); fillers[k] = (fillers[k] || 0) + 1; }
+  const speakers = {};
+  t.split(/\n+/).forEach(line => {
+    const sm = line.match(/^\s*([A-Z][A-Za-z.'’ -]{0,24}):\s*(.+)$/);
+    if (sm && !/^(note|notes|slide|demo|time|goal|tip|q|a)$/i.test(sm[1].trim())) {
+      const w = (sm[2].match(/[A-Za-z0-9'’-]+/g) || []).length;
+      speakers[sm[1].trim()] = (speakers[sm[1].trim()] || 0) + w;
+    }
+  });
+  const fillerTotal = Object.values(fillers).reduce((a, b) => a + b, 0);
+  return { words: words.length, estSeconds: words.length / 140 * 60, wpm: durationSec && words.length ? Math.round(words.length / (durationSec / 60)) : null, fillers, fillerTotal, speakers };
+}
+
+/* ---------- reading talking-point files ---------- */
+let jszipPromise = null;
+function loadJSZip() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  if (!jszipPromise) jszipPromise = new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+    s.onload = () => window.JSZip ? res(window.JSZip) : rej(new Error("no JSZip"));
+    s.onerror = () => rej(new Error("load failed"));
+    document.head.appendChild(s);
+  });
+  return jszipPromise;
+}
+async function readTextFile(file) {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".pdf")) {
+    const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer(), isEvalSupported: false }).promise;
+    let out = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const tc = await (await pdf.getPage(i)).getTextContent();
+      let lastY = null;
+      for (const it of tc.items) { if (!("str" in it)) continue; if (lastY !== null && Math.abs(it.transform[5] - lastY) > 2) out += "\n"; else if (out && !/\s$/.test(out)) out += " "; out += it.str; lastY = it.transform[5]; }
+      out += "\n\n";
+    }
+    return out.trim();
+  }
+  if (name.endsWith(".docx")) {
+    const JSZip = await loadJSZip();
+    const zip = await JSZip.loadAsync(await file.arrayBuffer());
+    const xml = await zip.file("word/document.xml").async("string");
+    return xml.replace(/<w:tab\/>/g, "\t").replace(/<w:br[^>]*\/>/g, "\n").replace(/<\/w:p>/g, "\n").replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/\n{3,}/g, "\n\n").trim();
+  }
+  return (await file.text()).trim();
+}
+$("#ivTextFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  $("#ivTextInfo").textContent = "Reading " + f.name + "…";
+  try {
+    const t = await readTextFile(f);
+    if (!t) throw new Error("empty");
+    $("#ivText").value = t; iv.textName = f.name;
+    const st = speechStats(t);
+    $("#ivTextInfo").textContent = `${f.name}: ${st.words} words, about ${fmtTime(st.estSeconds)} at a normal speaking pace.`;
+  } catch {
+    $("#ivTextInfo").textContent = `Couldn't read ${f.name}. Copy the text and paste it into the box instead.`;
+  }
+  e.target.value = "";
+});
+$("#ivText").addEventListener("input", () => {
+  const st = speechStats($("#ivText").value);
+  $("#ivTextInfo").textContent = st.words ? `${st.words} words, about ${fmtTime(st.estSeconds)} at a normal speaking pace (140 words a minute).` : "";
+});
+
+/* ---------- video: duration + still frames, all in the browser ---------- */
+function once(el, ev, ms) {
+  return new Promise((res, rej) => {
+    const t = setTimeout(() => { el.removeEventListener(ev, h); rej(new Error("timeout")); }, ms || 8000);
+    const h = () => { clearTimeout(t); el.removeEventListener(ev, h); res(); };
+    el.addEventListener(ev, h);
+  });
+}
+async function videoFrames(file, onProgress) {
+  const url = URL.createObjectURL(file);
+  const v = document.createElement("video");
+  v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+  try {
+    await new Promise((res, rej) => { v.onloadeddata = res; v.onerror = () => rej(new Error("This browser can't open that video. Export it as an MP4 (H.264) and try again.")); setTimeout(() => rej(new Error("The video took too long to open. Try a shorter MP4.")), 20000); });
+    const dur = v.duration;
+    if (!Number.isFinite(dur) || dur <= 0) throw new Error("Couldn't read the video's length. Export it as an MP4 and try again.");
+    const n = Math.max(6, Math.min(12, Math.round(dur / 25)));
+    const times = Array.from({ length: n }, (_, i) => Math.min(dur - 0.05, (i + 0.5) * dur / n));
+    const W = 640, H = Math.round((v.videoHeight || 360) * W / (v.videoWidth || 640));
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const ctx = c.getContext("2d");
+    const frames = [];
+    for (let i = 0; i < times.length; i++) {
+      v.currentTime = times[i];
+      try { await once(v, "seeked", 8000); } catch { continue; }
+      ctx.drawImage(v, 0, 0, W, H);
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.7));
+      frames.push({ t: times[i], blob, thumb: c.toDataURL("image/jpeg", 0.6) });
+      onProgress && onProgress(i + 1, times.length);
+    }
+    if (!frames.length) throw new Error("Couldn't take frames from that video. Export it as an MP4 (H.264) and try again.");
+    return { duration: dur, frames };
+  } finally { URL.revokeObjectURL(url); }
+}
+$("#ivVideo").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return;
+  iv.video = f; iv.frames = []; iv.duration = null;
+  if (iv.videoUrl) URL.revokeObjectURL(iv.videoUrl);
+  iv.videoUrl = URL.createObjectURL(f);
+  const p = $("#ivPreview"); p.src = iv.videoUrl; p.hidden = false;
+  p.onloadedmetadata = () => { iv.duration = p.duration; $("#ivVideoInfo").textContent = `${f.name} · ${fmtTime(p.duration)} long${p.duration > 330 ? " (longer than the 5-minute presentation)" : ""}. It stays on this computer; only still frames are sent.`; };
+  p.onerror = () => { $("#ivVideoInfo").textContent = "This browser can't play that video. Export it as an MP4 (H.264) and try again."; };
+});
+
+/* ---------- prompts ---------- */
+function portfolioContext() {
+  const r = state.report;
+  if (!r) return "No portfolio review has been run for this team yet.";
+  const lines = r.awards.filter(a => a.id !== "inspire").map(a => {
+    const weak = a.criteria.filter(c => c.score && c.score <= 3).map(c => `${c.n}${AWARD_BY_ID[a.id].criteria.find(x => x.n === c.n).req ? "(req)" : ""}=${c.score}`);
+    return `${AWARD_BY_ID[a.id].name}: ${a.score || "–"}/5, ${READINESS[a.readiness]}${weak.length ? "; weak criteria " + weak.join(", ") : ""}`;
+  });
+  const insp = r.awards.find(a => a.id === "inspire");
+  const secs = (state.sections || []).filter(s => s.status !== "covered").map(s => `${SECTION_BY_ID[s.id].name} (${s.status})`);
+  return `Portfolio review results:\n${lines.join("\n")}\nInspire: ${insp ? READINESS[insp.readiness] : "–"}\nPortfolio summary: ${r.overall.summary || ""}\nThin or missing portfolio sections: ${secs.join(", ") || "none"}`;
+}
+function ivContext() {
+  return `Team: ${state.meta.team || $("#team").value.trim() || "not given"}. Next event: ${$("#level").value}. Target awards: ${[...document.querySelectorAll("#focus input:checked")].map(i => AWARD_BY_ID[i.value].name).join(", ") || "not specified"}.`;
+}
+function framePrompt(batch, total) {
+  return `You are helping a FIRST Tech Challenge student team improve the delivery of their judging-interview presentation. These are still frames from a PRACTICE video (${batch.length} of ${total} frames), in order. Timestamps: ${batch.map((f, i) => `image ${i + 1} = ${fmtTime(f.t)}`).join(", ")}.
+
+For each frame, note only what you can actually see: how many students are visible and whether several seem to take part; posture and whether speakers face the camera/judges; use of the robot, prototypes, portfolio, posters or slides; setting, lighting and anything distracting. Don't guess what is being said, and don't identify or describe anyone's appearance beyond what matters for presenting.
+
+Return ONLY JSON: {"frames":[{"t":"<m:ss>","note":"<1-2 sentences>"}]}`;
+}
+function interviewPrompt(input) {
+  const st = input.stats;
+  return `You are an experienced FIRST Tech Challenge judge coaching a student team on their judging-interview presentation before their next event. Season: 2026-27 BIOBUZZ. ${ivContext()}
+
+${INTERVIEW_RULES}
+
+Award criteria (required criteria must be clearly shown; encouraged ones should be evident):
+${CRITERIA_TEXT}
+
+${portfolioContext()}
+
+What the team gave you:
+- Students presenting: ${input.students || "not given"}
+- Talking points / script${input.textName ? ` (from ${input.textName})` : ""}: ${input.text ? `\n"""\n${input.text.slice(0, 20000)}\n"""` : "none"}
+- Practice video: ${input.duration ? `${fmtTime(input.duration)} long` : "none"}
+- Transcript of the video: ${input.transcript ? `\n"""\n${input.transcript.slice(0, 20000)}\n"""` : "none"}
+- Measured on the page: ${st.words} words${st.wpm ? `, ${st.wpm} words per minute` : ""}, estimated speaking time ${fmtTime(input.duration || st.estSeconds)}, filler words ${st.fillerTotal}${Object.keys(st.speakers).length ? `, words per speaker: ${Object.entries(st.speakers).map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}.
+- Notes from video frames: ${input.frameNotes.length ? input.frameNotes.map(f => `${f.t}: ${f.note}`).join(" | ") : "none"}
+
+Score each dimension 1–5 on the same evidence scale used for portfolios (5 = extensive, clear and visible; 4 = strong with small gaps; 3 = adequate but thin; 2 = weak or only implied; 1 = missing). Use null for "delivery" if there is no video and no transcript.
+Dimensions: ${IV_DIMS.map(d => `${d.id} = ${d.name}: ${d.desc}`).join(" | ")}
+
+Return ONLY a JSON object, no prose:
+{"summary":"<3-4 sentences on how this presentation would land with judges>","scores":[{"id":"<dimension id>","score":<1-5 or null>,"why":"<what you saw, quoting specifics>","improve":"<the change that would raise it by a point>"}],"strengths":["<2-4 specific strengths>"],"improvements":[{"title":"<short imperative>","how":"<concrete steps; quote lines to cut or rewrite where useful>","why":"<which award criteria or rule it helps>"}],"runOfShow":[{"segment":"<part of the presentation>","seconds":<number>,"speaker":"<role or first name>","points":["<key points to hit>"]}],"awardCoverage":[{"award":"<award id>","level":"strong|partial|missing","note":"<what the presentation says or should add>"}],"deliveryNotes":[{"t":"<m:ss or empty>","note":"<specific delivery observation or tip>"}],"questions":[{"q":"<a question judges are likely to ask>","category":"MCI|TA|Think|Inspire","award":"<award id>","why":"<why judges would ask this team this>","strongAnswer":["<what a strong answer includes>"],"who":"<which student role should answer>"}]}
+
+Rules:
+- improvements: 4-7, ranked by impact. Fix rule problems first (over ~5 minutes, only one student speaking), then gaps on REQUIRED criteria for the team's target awards (especially awards that don't need a portfolio, and Inspire 3-4), then specifics and delivery.
+- runOfShow: a recommended plan for this team that totals 270-300 seconds, with a speaker for each part and a hand-off to several students. Base it on their own content.
+- awardCoverage: include all 8 award ids.
+- questions: 10 questions. The first two must be in the style of the Question Bank openers: one MCI, one TA. The rest target this team's weak spots and target awards. Write them as a judge would ask them. Don't claim they are the official Question Bank questions.
+- Never invent things the team did; base feedback on what they gave you. Be direct, encouraging and specific; this is for students.`;
+}
+function answerPrompt(q, answer) {
+  return `You are an experienced FIRST Tech Challenge judge helping a student practise for the judging interview. Season: 2026-27 BIOBUZZ. ${ivContext()}
+
+${INTERVIEW_RULES}
+
+${portfolioContext()}
+
+Question: "${q.q}" (${q.category}${q.award && AWARD_BY_ID[q.award] ? ", " + AWARD_BY_ID[q.award].name : ""})
+What a strong answer includes: ${(q.strongAnswer || []).join("; ")}
+The student's practice answer:
+"""
+${answer.slice(0, 6000)}
+"""
+
+Judge this answer as spoken in an interview (about 30-90 seconds is ideal). Return ONLY JSON:
+{"score":<1-5>,"good":["<what works>"],"improve":["<specific changes, most important first>"],"outline":["<a stronger answer as 3-5 short bullet points in the student's own content; don't write a script and don't invent facts>"],"length":"<too short|about right|too long>"}`;
+}
+
+/* ---------- run ---------- */
+async function requireConnection() {
+  if (!$("#codeField").hidden && !accessCode()) { $("#ivStatus").textContent = "Enter your team access code in the sidebar first."; $("#code").focus(); return null; }
+  if (!$("#keyField").hidden && !/^sk-ant-/.test(apiKey())) { $("#ivStatus").textContent = "Paste your team's Claude API key in the sidebar first."; $("#apikey").focus(); return null; }
+  if (!$("#keyField").hidden && remembering()) store.set("pr:key", apiKey());
+  const sample = await getSample();
+  if (!sample) { $("#ivStatus").textContent = "This page can't reach Claude here. Open it on claude.ai or the team website."; return null; }
+  return sample;
+}
+function errText(err) {
+  if (err && err.message && ["bad_code", "bad_key", "network", "server", "rate_limited"].includes(err.code)) return err.message;
+  if (err && err.code === "not_granted") return "Claude access wasn't granted for this page. Allow access when prompted and try again.";
+  return "Something went wrong: " + ((err && (err.message || err.code)) || err) + ". Try again.";
+}
+$("#ivRun").addEventListener("click", async () => {
+  if (iv.running) return;
+  const text = $("#ivText").value.trim(), transcript = $("#ivTranscript").value.trim();
+  if (!text && !transcript && !iv.video) { $("#ivStatus").textContent = "Add talking points, a practice video, or a transcript first."; return; }
+  const sample = await requireConnection(); if (!sample) return;
+  iv.running = true; $("#ivRun").disabled = true;
+  try {
+    let frameNotes = [];
+    if (iv.video) {
+      $("#ivStatus").textContent = "Taking still frames from your video…";
+      const vf = await videoFrames(iv.video, (i, n) => { $("#ivStatus").textContent = `Taking still frames from your video (${i} of ${n})…`; });
+      iv.duration = vf.duration; iv.frames = vf.frames;
+      let per = 3; try { const lim = await sample.limits(); per = typeof lim.images === "number" ? Math.max(1, Math.min(4, lim.images)) : (lim.images ? 3 : 0); } catch {}
+      if (per > 0) {
+        for (let i = 0; i < iv.frames.length; i += per) {
+          const batch = iv.frames.slice(i, i + per);
+          $("#ivStatus").textContent = `Looking at frames ${i + 1}–${i + batch.length} of ${iv.frames.length}…`;
+          try {
+            const res = await askJSON(sample, framePrompt(batch, iv.frames.length), { images: batch.map(f => f.blob), modelTier: "default" });
+            (res.frames || []).forEach(f => frameNotes.push({ t: String(f.t || ""), note: String(f.note || "") }));
+          } catch (err) { if (err && ["bad_code", "bad_key", "network", "not_granted"].includes(err.code)) throw err; }
+        }
+      }
+      iv.frameNotes = frameNotes;
+    }
+    $("#ivStatus").textContent = "Writing your interview feedback…";
+    const stats = speechStats(transcript || text, transcript ? iv.duration : null);
+    const input = { text, textName: iv.textName, transcript, duration: iv.duration, students: $("#ivStudents").value, stats, frameNotes };
+    const res = await askJSON(sample, interviewPrompt(input), { modelTier: "complex" });
+    iv.result = normaliseInterview(res, input);
+    iv.questions = iv.result.questions; iv.answers = {}; iv.feedback = {};
+    $("#ivStatus").textContent = "Done. Scroll down for your scores, a 5-minute plan and practice questions.";
+    $("#exportRow").hidden = false;
+    renderInterview();
+    saveIfRemembering();
+    document.getElementById("ivResults").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) {
+    $("#ivStatus").textContent = errText(err);
+  } finally { iv.running = false; $("#ivRun").disabled = false; }
+});
+function normaliseInterview(r, input) {
+  const sm = Object.fromEntries((r.scores || []).map(s => [s.id, s]));
+  const scores = IV_DIMS.map(d => { const g = sm[d.id] || {}; const n = clampScore(g.score); return { id: d.id, score: (d.id === "delivery" && !input.duration && !input.transcript) ? null : n, why: g.why || "", improve: g.improve || "" }; });
+  const vals = scores.map(s => s.score).filter(Boolean);
+  return {
+    summary: r.summary || "", scores, overall: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null,
+    strengths: r.strengths || [], improvements: r.improvements || [], runOfShow: (r.runOfShow || []).map(x => ({ ...x, seconds: Number(x.seconds) || 0 })),
+    awardCoverage: r.awardCoverage || [], deliveryNotes: r.deliveryNotes || [], questions: (r.questions || []).filter(q => q && q.q),
+    stats: input.stats, duration: input.duration || null, hadVideo: !!input.duration, hadTranscript: !!input.transcript, students: input.students,
+    frames: (iv.frames || []).map(f => ({ t: f.t, thumb: f.thumb })), frameNotes: input.frameNotes || []
+  };
+}
+
+/* ---------- practice answers ---------- */
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-check]"); if (!b) return;
+  const i = +b.dataset.check, q = iv.questions[i];
+  const ta = document.getElementById("ans-" + i), out = document.getElementById("fb-" + i);
+  const answer = ta.value.trim(); iv.answers[i] = answer;
+  if (answer.split(/\s+/).length < 8) { out.innerHTML = `<p class="fine">Write or paste your answer first, the way you'd say it out loud.</p>`; return; }
+  const sample = await requireConnection(); if (!sample) { out.innerHTML = `<p class="fine">${esc($("#ivStatus").textContent)}</p>`; return; }
+  b.disabled = true; out.innerHTML = `<p class="fine">Checking your answer…</p>`;
+  try {
+    const r = await askJSON(sample, answerPrompt(q, answer), { modelTier: "complex" });
+    iv.feedback[i] = { score: clampScore(r.score), good: r.good || [], improve: r.improve || [], outline: r.outline || [], length: r.length || "" };
+    out.innerHTML = answerFeedbackHTML(iv.feedback[i]);
+    saveIfRemembering();
+  } catch (err) { out.innerHTML = `<p class="fine">${esc(errText(err))}</p>`; }
+  finally { b.disabled = false; }
+});
+function answerFeedbackHTML(f) {
+  return `<div class="qfb"><div class="row">${scorePips(f.score)}<span class="fine">${f.score ? SCORE[f.score].label : ""}${f.length ? " · length: " + esc(f.length) : ""}</span></div>
+    ${f.good.length ? `<div><h4>Working</h4><ul class="tight">${f.good.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${f.improve.length ? `<div><h4>Improve</h4><ol class="tight">${f.improve.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}
+    ${f.outline.length ? `<div><h4>A stronger answer could cover</h4><ul class="tight">${f.outline.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>`;
+}
+
+/* ---------- rendering ---------- */
+function renderInterview() {
+  const r = iv.result;
+  $("#c-interview").textContent = r && r.overall ? r.overall + "/5" : "";
+  const R = $("#ivResults"), Q = $("#ivQuestions");
+  if (!r) { R.innerHTML = ""; Q.innerHTML = ""; return; }
+  const st = r.stats || {};
+  const secs = r.duration || st.estSeconds || 0;
+  const pct = Math.min(100, secs / 420 * 100), over = secs > 315;
+  const speakers = Object.entries(st.speakers || {});
+  const totalW = speakers.reduce((a, [, w]) => a + w, 0) || 1;
+  R.innerHTML = `
+    <div class="panel" style="display:flex;flex-direction:column;gap:14px">
+      <div class="row" style="justify-content:space-between"><h2>Presentation feedback</h2><div class="row">${scorePips(r.overall)}<span class="fine">overall</span></div></div>
+      <p class="lede">${esc(r.summary)}</p>
+      <div class="iv-stats">
+        <div class="stat ${over ? "warnish" : ""}"><b>${fmtTime(secs)}</b><span>${r.duration ? "video length" : "estimated speaking time"} · limit about 5:00</span><div class="timebar"><i class="${over ? "over" : ""}" style="width:${pct}%"></i><span class="mark" style="left:${300 / 420 * 100}%"></span></div></div>
+        <div class="stat"><b>${st.words || 0}</b><span>words${st.wpm ? ` · ${st.wpm} per minute (aim for 130–160)` : ""}</span></div>
+        ${r.hadTranscript || r.hadVideo ? `<div class="stat ${st.fillerTotal > 10 ? "warnish" : ""}"><b>${st.fillerTotal || 0}</b><span>filler words${Object.keys(st.fillers || {}).length ? " · " + Object.entries(st.fillers).map(([k, v]) => `${esc(k)} ${v}`).join(", ") : ""}</span></div>` : ""}
+        <div class="stat ${speakers.length && speakers.length < 2 ? "warnish" : ""}"><b>${speakers.length || (r.students || "–")}</b><span>${speakers.length ? "speakers: " + speakers.map(([k, w]) => `${esc(k)} ${Math.round(w / totalW * 100)}%`).join(", ") : "students presenting (label speakers like “Maya:” to see each person's share)"}</span></div>
+      </div>
+      <div class="dims">${IV_DIMS.map(d => { const s = r.scores.find(x => x.id === d.id) || {}; return `<div class="dim"><div><b>${esc(d.name)}</b>${s.why ? `<p>${esc(s.why)}</p>` : `<p class="fine">${d.id === "delivery" ? "Add a practice video or transcript to score delivery." : ""}</p>`}${s.improve ? `<p class="sug">${esc(s.improve)}</p>` : ""}</div>${scorePips(s.score)}</div>`; }).join("")}</div>
+    </div>
+    <div class="panel two">
+      <div><h4>Working well</h4><ul class="tight">${r.strengths.map(x => `<li>${esc(x)}</li>`).join("") || "<li class='muted'>Nothing specific noted.</li>"}</ul></div>
+      <div><h4>Change before your event</h4><ol class="tight">${r.improvements.map(x => `<li><b>${esc(x.title)}.</b> ${esc(x.how)} <span class="fine">${esc(x.why || "")}</span></li>`).join("")}</ol></div>
+    </div>
+    ${r.runOfShow.length ? `<div class="panel"><div class="row" style="justify-content:space-between"><h2>Recommended 5-minute plan</h2><span class="mono muted">total ${fmtTime(r.runOfShow.reduce((a, x) => a + x.seconds, 0))}</span></div><div class="tablewrap"><table class="ros"><thead><tr><th>Time</th><th>Part</th><th>Who</th><th>Hit these points</th></tr></thead><tbody>${(() => { let t = 0; return r.runOfShow.map(x => { const row = `<tr><td class="t">${fmtTime(t)}–${fmtTime(t + x.seconds)}</td><td><b>${esc(x.segment)}</b></td><td>${esc(x.speaker || "")}</td><td><ul class="tight">${(x.points || []).map(p => `<li>${esc(p)}</li>`).join("")}</ul></td></tr>`; t += x.seconds; return row; }).join(""); })()}</tbody></table></div></div>` : ""}
+    ${r.awardCoverage.length ? `<div class="panel"><h2>Award coverage in your presentation</h2><ul class="elist">${r.awardCoverage.filter(a => AWARD_BY_ID[a.award]).map(a => `<li><span><b>${esc(AWARD_BY_ID[a.award].name)}</b> <span class="fine">· ${esc(a.note || "")}</span></span>${pill({ strong: "ok", partial: "part", missing: "missing" }[a.level] || "pending", { strong: "Strong", partial: "Partly", missing: "Missing" }[a.level] || "–")}</li>`).join("")}</ul></div>` : ""}
+    ${r.frames.length || r.deliveryNotes.length ? `<div class="panel" style="display:flex;flex-direction:column;gap:12px"><h2>Delivery notes</h2>${r.deliveryNotes.length ? `<ul class="tight">${r.deliveryNotes.map(n => `<li>${n.t ? `<span class="mono">${esc(n.t)}</span> ` : ""}${esc(n.note)}</li>`).join("")}</ul>` : ""}${r.frames.length ? `<div class="frames">${r.frames.map(f => { const note = (r.frameNotes || []).find(n => n.t === fmtTime(f.t)); return `<figure>${f.thumb ? `<img src="${f.thumb}" alt="Frame at ${fmtTime(f.t)}">` : ""}<figcaption><span class="mono">${fmtTime(f.t)}</span> ${esc(note ? note.note : "")}</figcaption></figure>`; }).join("")}</div>` : ""}</div>` : ""}`;
+  Q.innerHTML = iv.questions.length ? `<div class="panel" style="display:flex;flex-direction:column;gap:14px">
+    <h2>Practise the Q&amp;A</h2>
+    <p class="muted">Questions written in the style of the judges' Question Bank and aimed at your gaps. They are not the official questions, so also review the official Judge Interview Question Bank. Type or paste your answer the way you'd say it, then check it.</p>
+    ${iv.questions.map((q, i) => `<div class="qcard">
+      <div class="row"><span class="chip">${esc(q.category || "")}</span>${q.award && AWARD_BY_ID[q.award] ? `<span class="chip">${esc(AWARD_BY_ID[q.award].name.replace(" Award", ""))}</span>` : ""}${i < 2 ? '<span class="chip chip-thin">Question Bank style opener</span>' : ""}</div>
+      <p class="q">${i + 1}. ${esc(q.q)}</p>
+      <p class="fine">${esc(q.why || "")}${q.who ? ` · Suggested speaker: ${esc(q.who)}` : ""}</p>
+      <details><summary>What a strong answer includes</summary><ul class="tight">${(q.strongAnswer || []).map(x => `<li>${esc(x)}</li>`).join("")}</ul></details>
+      <textarea id="ans-${i}" rows="3" placeholder="Your answer…">${esc(iv.answers[i] || "")}</textarea>
+      <div class="row"><button class="btn" type="button" data-check="${i}">Check my answer</button></div>
+      <div id="fb-${i}">${iv.feedback[i] ? answerFeedbackHTML(iv.feedback[i]) : ""}</div>
+    </div>`).join("")}
+  </div>` : "";
+}
+function interviewMarkdown() {
+  const r = iv.result; if (!r) return [];
+  const L = ["## Interview prep", "", r.summary || "", "", `Length: ${fmtTime(r.duration || (r.stats || {}).estSeconds)} · Words: ${(r.stats || {}).words || 0}${(r.stats || {}).wpm ? " · " + r.stats.wpm + " wpm" : ""} · Filler words: ${(r.stats || {}).fillerTotal || 0}`, ""];
+  IV_DIMS.forEach(d => { const s = r.scores.find(x => x.id === d.id) || {}; L.push(`- **${d.name}: ${s.score ? s.score + "/5" : "–"}** ${s.why || ""}${s.improve ? " → " + s.improve : ""}`); });
+  if (r.improvements.length) { L.push("", "### Change before your event"); r.improvements.forEach((x, i) => L.push(`${i + 1}. **${x.title}** — ${x.how} ${x.why || ""}`)); }
+  if (r.runOfShow.length) { L.push("", "### Recommended 5-minute plan"); let t = 0; r.runOfShow.forEach(x => { L.push(`- ${fmtTime(t)}–${fmtTime(t + x.seconds)} **${x.segment}** (${x.speaker || ""}): ${(x.points || []).join("; ")}`); t += x.seconds; }); }
+  if (iv.questions.length) { L.push("", "### Practice questions"); iv.questions.forEach((q, i) => { L.push(`${i + 1}. ${q.q} (${q.category || ""})`, `   - Strong answer includes: ${(q.strongAnswer || []).join("; ")}`); if (iv.feedback[i]) L.push(`   - Your practice answer: ${iv.feedback[i].score || "–"}/5. Improve: ${iv.feedback[i].improve.join("; ")}`); }); }
+  L.push("");
+  return L;
+}
+function saveIfRemembering() {
+  if (!remembering()) return;
+  const last = store.get("pr:last") || {};
+  last.interview = { result: iv.result ? { ...iv.result, frames: [] } : null, questions: iv.questions, answers: iv.answers, feedback: iv.feedback };
+  store.set("pr:last", last);
+}
+function resetInterview() {
+  iv.text = ""; iv.textName = ""; iv.video = null; iv.duration = null; iv.frames = []; iv.frameNotes = []; iv.result = null; iv.questions = []; iv.answers = {}; iv.feedback = {};
+  if (iv.videoUrl) { URL.revokeObjectURL(iv.videoUrl); iv.videoUrl = ""; }
+  $("#ivText").value = ""; $("#ivTranscript").value = ""; $("#ivStudents").value = ""; $("#ivTextInfo").textContent = ""; $("#ivStatus").textContent = "";
+  const p = $("#ivPreview"); p.removeAttribute("src"); p.hidden = true; $("#ivVideo").value = "";
+  $("#ivVideoInfo").textContent = "Your video never leaves this computer. The page takes still frames to check body language, who's on camera, and use of the robot and props, and sends only those frames.";
+  renderInterview();
+}
+
 /* ---------- export ---------- */
 function toMarkdown() {
   const m = state.meta, r = state.report, L = [];
@@ -1329,6 +1791,7 @@ function toMarkdown() {
       L.push("");
     });
   }
+  L.push(...interviewMarkdown());
   L.push("## Page by page", "");
   state.pages.forEach(p => {
     const pr = state.pageReviews[p.n];
@@ -1371,6 +1834,7 @@ $("#remember").addEventListener("change", () => {
   if ($("#remember").checked) {
     store.set("pr:remember", true);
     if (state.report) store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
+    saveIfRemembering();
     if (!$("#codeField").hidden && accessCode()) store.set("pr:code", accessCode());
     if (!$("#keyField").hidden && apiKey()) store.set("pr:key", apiKey());
     message("Your last review will be saved on this computer.");
@@ -1386,6 +1850,7 @@ $("#clear").addEventListener("click", () => {
   $("#file").value = ""; $("#fname").textContent = ""; $("#team").value = ""; if ($("#code")) $("#code").value = ""; if ($("#apikey")) $("#apikey").value = "";
   document.querySelectorAll("#focus input").forEach(i => { i.checked = false; });
   $("#run").disabled = true; $("#exportRow").hidden = true; $("#progress").hidden = true;
+  resetInterview();
   renderAll(); showTab("overview");
   message("Your review was cleared from this page and this computer.");
 });
@@ -1395,6 +1860,10 @@ $("#privacyLink").addEventListener("click", e => { e.preventDefault(); $("#priva
 (function restore() {
   const last = remembering() ? store.get("pr:last") : null;
   if (!remembering()) { forget("pr:last"); forget("pr:code"); forget("pr:key"); }
+  if (last && last.interview && last.interview.result) {
+    $("#exportRow").hidden = false;
+    iv.result = last.interview.result; iv.questions = last.interview.questions || []; iv.answers = last.interview.answers || {}; iv.feedback = last.interview.feedback || {};
+  }
   if (last && last.report && last.report.awards && last.report.awards[0] && "cats" in last.report.awards[0]) {
     state.meta = last.meta || {}; state.checks = last.checks || []; state.pageReviews = last.pageReviews || {}; state.report = last.report; state.sections = last.sections || null;
     state.pages = (last.pages || []).map(p => ({ ...p, thumb: "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="259"><rect width="200" height="259" fill="#eef0f5"/></svg>') }));

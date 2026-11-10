@@ -6,6 +6,11 @@ A web page where FIRST Tech Challenge teams upload their engineering portfolio (
 - **Section checklists** for 15 portfolio sections, adapted from the LOAD Robotics 25609 Starter Port.
 - **Page-by-page notes**: what a judge sees in a 30-second skim, strengths, ranked fixes, readability.
 - **Every award criterion scored 1–5** for the seven non-Inspire awards. Required criteria that score 1–2 make the team not eligible. Inspire contention is worked out from the Think, Machine/Creativity/Innovation and Team Attributes scores.
+- **Interview prep**
+  - A summary of the judging-interview rules (A203–A210).
+  - Feedback on a team's 5-minute presentation from their talking points (paste, .txt, .md, .pdf or .docx), a practice video, and/or a transcript, scored 1–5 on six areas, with a recommended 5-minute plan and award coverage.
+  - Practice questions written in the style of the Question Bank, with feedback on each answer.
+  - Practice videos never leave the team's computer; only a few still frames are sent to Claude.
 
 Built by Largo Robotics for the 2026-27 BIOBUZZ season.
 
