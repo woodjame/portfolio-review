@@ -248,6 +248,9 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
 .foot-grid h2 { font-size: 18px; }
 .foot-grid a { color: var(--accent); }
 @media (max-width: 860px) { .foot-grid { grid-template-columns: 1fr; } }
+.keyhelp { font-size: 13px; }
+.keyhelp summary { font-size: 13px; }
+.keyhelp ol { margin: 6px 0; padding-left: 18px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -275,6 +278,18 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
       </label>
       <input type="file" id="file" accept="application/pdf,.pdf">
 
+      <div class="field" id="keyField" hidden>
+        <label for="apikey">Your team's Claude API key</label>
+        <input type="password" id="apikey" autocomplete="off" spellcheck="false" placeholder="sk-ant-…">
+        <details class="keyhelp"><summary>How do I get a key?</summary>
+          <ol class="tight">
+            <li>Go to <b>platform.claude.com</b> and sign in or create an account.</li>
+            <li>Add a little credit under <b>Billing</b>. A review costs about $0.30, so $5 covers many reviews. Set a spend limit under <b>Limits</b>.</li>
+            <li>Open <b>API keys → Create key</b>, copy it and paste it here.</li>
+          </ol>
+          <p class="fine">Your key goes only from this browser to Anthropic. Largo Robotics never sees it, and it isn't saved unless you tick "Save my last review on this computer". Treat it like a password.</p>
+        </details>
+      </div>
       <div class="field" id="codeField" hidden>
         <label for="code">Team access code</label>
         <input type="password" id="code" autocomplete="off" placeholder="From Largo Robotics">
@@ -343,10 +358,10 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
       <h2>Your portfolio stays private</h2>
       <ul class="tight">
         <li><b>Read in your browser.</b> Your PDF is opened on your own computer. The rule check runs entirely here, and the PDF file itself is never uploaded or stored.</li>
-        <li><b>Sent only to Claude, only for your review.</b> Page images and text are sent to Claude (Anthropic) to write your feedback, then sent straight back to you. On the website version they pass through our review server, which keeps no copy and has no database of portfolios.</li>
+        <li><b>Sent only to Claude, only for your review.</b> Page images and text are sent to Claude (Anthropic) to write your feedback, then sent straight back to you. On the website version they go straight from your browser to Anthropic using your team's own API key; they never pass through any Largo Robotics server.</li>
         <li><b>No other team can see it.</b> There is no shared folder, list, or gallery. Every review is separate, and no one, including Largo Robotics, can browse submitted portfolios or feedback.</li>
         <li><b>Anthropic's API terms.</b> Under Anthropic's commercial API terms, inputs and outputs are not used to train models, and they are deleted after a short retention period.</li>
-        <li><b>On your computer.</b> Your last review is saved in this browser only if you tick "Save my last review on this computer". "Clear my review" removes it at any time.</li>
+        <li><b>On your computer.</b> Your last review and API key are saved in this browser only if you tick "Save my last review on this computer". "Clear my review" removes them at any time.</li>
         <li><b>Protect student privacy.</b> Use first names and last initials only, as rule A201 asks.</li>
       </ul>
     </section>
@@ -673,14 +688,48 @@ function remoteSample() {
   call.limits = async () => ({ images: CFG.maxImagesPerCall || 3 });
   return call;
 }
+/* 3. No server at all (GitHub Pages on its own): each team uses its own Claude API key.
+      The request goes straight from the team's browser to Anthropic; no Largo Robotics server is involved. */
+function apiKey() { const el = $("#apikey"); return el ? el.value.trim() : ""; }
+function directSample() {
+  const call = async (prompt, opts = {}) => {
+    const images = await Promise.all((opts.images || []).map(blobToBase64));
+    const model = opts.modelTier === "complex" ? (CFG.modelComplex || "claude-sonnet-5-5") : (CFG.modelDefault || "claude-haiku-5-5");
+    const content = [...images.map(data => ({ type: "image", source: { type: "base64", media_type: "image/jpeg", data } })), { type: "text", text: prompt }];
+    let res;
+    try {
+      res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST", signal: opts.signal,
+        headers: { "content-type": "application/json", "x-api-key": apiKey(), "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+        body: JSON.stringify({ model, max_tokens: CFG.maxTokens || 16000, messages: [{ role: "user", content }] })
+      });
+    } catch (e) { if (opts.signal && opts.signal.aborted) throw e; throw { code: "network", message: "Couldn't reach Claude. Check your internet connection and try again." }; }
+    let data = {}; try { data = await res.json(); } catch {}
+    const apiMsg = data && data.error && data.error.message;
+    if (res.status === 401 || res.status === 403) throw { code: "bad_key", message: "Claude didn't accept that API key. Check that you copied the whole key from the Claude Console." };
+    if (res.status === 429 || res.status === 529) throw { code: "rate_limited", message: "Claude is busy or your key hit its rate limit. Wait a minute and try again." };
+    if (res.status === 400 && /credit|balance|billing/i.test(apiMsg || "")) throw { code: "bad_key", message: "Your Claude account is out of credit. Add credit in the Claude Console (Billing), then try again." };
+    if (!res.ok) throw { code: "server", message: apiMsg || `Claude returned an error (${res.status}).` };
+    const text = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("");
+    return { text, truncated: data.stop_reason === "max_tokens" };
+  };
+  call.limits = async () => ({ images: CFG.maxImagesPerCall || 3 });
+  return call;
+}
+const MODE = IN_CLAUDE ? "claude" : CFG.apiUrl ? "server" : "own-key";
 let samplePromise = null;
 function getSample() {
   if (!samplePromise) samplePromise = (async () => {
     if (IN_CLAUDE) { try { const s = await window.claude.use("sample"); if (s) return s; } catch {} }
     if (CFG.apiUrl) return remoteSample();
-    return null;
+    return directSample();
   })();
   return samplePromise;
+}
+if (MODE === "own-key") {
+  $("#keyField").hidden = false;
+  const savedKey = remembering() ? store.get("pr:key") : null; if (savedKey) $("#apikey").value = savedKey;
+  $("#apikey").addEventListener("change", () => { if (remembering()) store.set("pr:key", apiKey()); });
 }
 if (!IN_CLAUDE && CFG.apiUrl && CFG.requireAccessCode !== false) {
   $("#codeField").hidden = false;
@@ -934,6 +983,8 @@ $("#cancel").addEventListener("click", () => { if (state.abort) state.abort.abor
 async function run() {
   if (!state.file || state.running) return;
   if (!$("#codeField").hidden && !accessCode()) { message("Enter your team access code first. Ask Largo Robotics if you don't have one.", true); $("#code").focus(); return; }
+  if (!$("#keyField").hidden && !/^sk-ant-/.test(apiKey())) { message("Paste your team's Claude API key first. It starts with sk-ant-. See “How do I get a key?” below the box.", true); $("#apikey").focus(); return; }
+  if (!$("#keyField").hidden && remembering()) store.set("pr:key", apiKey());
   if (!$("#codeField").hidden && remembering()) store.set("pr:code", accessCode());
   state.running = true; state.abort = new AbortController();
   $("#run").disabled = true; $("#cancel").hidden = false; $("#progress").hidden = false; $("#exportRow").hidden = true;
@@ -976,13 +1027,13 @@ async function run() {
     const failed = [];
     const work = async b => {
       const withImages = maxImages > 0;
-      const opts = { signal: state.abort.signal, modelTier: "complex" };
+      const opts = { signal: state.abort.signal, modelTier: "default" };
       if (withImages) opts.images = b.map(p => p.blob);
       try {
         const res = await askJSON(sample, pageBatchPrompt(b, ctx, withImages), opts);
         for (const r of res.pages || []) if (Number.isFinite(+r.page)) state.pageReviews[+r.page] = r;
       } catch (err) {
-        if (state.abort.signal.aborted || (err && ["not_granted", "bad_code", "network"].includes(err.code))) throw err;
+        if (state.abort.signal.aborted || (err && ["not_granted", "bad_code", "bad_key", "network"].includes(err.code))) throw err;
         failed.push(...b.map(p => p.n));
       }
       done += b.length;
@@ -1017,8 +1068,8 @@ async function run() {
     const active = document.querySelector(".step.active"); if (active) active.classList.replace("active", "fail");
     if (state.abort && state.abort.signal.aborted) message("Review stopped. Anything finished so far is still shown.");
     else if (err && err.code === "not_granted") message("Claude access wasn't granted for this page, so only the rule check ran. Allow access when prompted and run the review again.", true);
-    else if (err && (err.code === "bad_code" || err.code === "network" || err.code === "server")) message(esc(err.message), true);
-    else if (err && err.code === "rate_limited") message("Claude is busy right now. Wait a minute, then run the review again.", true);
+    else if (err && ["bad_code", "bad_key", "network", "server"].includes(err.code)) message(esc(err.message), true);
+    else if (err && err.code === "rate_limited") message(esc(err.message || "Claude is busy right now. Wait a minute, then run the review again."), true);
     else message(`Something went wrong: ${esc(err && (err.message || err.code) || err)}. Try again; if it repeats, try a smaller PDF.`, true);
     renderAll();
   } finally {
@@ -1321,17 +1372,18 @@ $("#remember").addEventListener("change", () => {
     store.set("pr:remember", true);
     if (state.report) store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
     if (!$("#codeField").hidden && accessCode()) store.set("pr:code", accessCode());
+    if (!$("#keyField").hidden && apiKey()) store.set("pr:key", apiKey());
     message("Your last review will be saved on this computer.");
   } else {
-    ["pr:remember", "pr:last", "pr:code"].forEach(forget);
+    ["pr:remember", "pr:last", "pr:code", "pr:key"].forEach(forget);
     message("Nothing will be saved on this computer. Anything saved before has been removed.");
   }
 });
 $("#clear").addEventListener("click", () => {
   if (state.running && state.abort) state.abort.abort();
-  ["pr:last", "pr:code"].forEach(forget);
+  ["pr:last", "pr:code", "pr:key"].forEach(forget);
   state.file = null; state.pages = []; state.checks = []; state.pageReviews = {}; state.report = null; state.sections = null; state.meta = {};
-  $("#file").value = ""; $("#fname").textContent = ""; $("#team").value = ""; if ($("#code")) $("#code").value = "";
+  $("#file").value = ""; $("#fname").textContent = ""; $("#team").value = ""; if ($("#code")) $("#code").value = ""; if ($("#apikey")) $("#apikey").value = "";
   document.querySelectorAll("#focus input").forEach(i => { i.checked = false; });
   $("#run").disabled = true; $("#exportRow").hidden = true; $("#progress").hidden = true;
   renderAll(); showTab("overview");
@@ -1342,7 +1394,7 @@ $("#privacyLink").addEventListener("click", e => { e.preventDefault(); $("#priva
 /* ---------- restore last report in this browser (only if the team opted in) ---------- */
 (function restore() {
   const last = remembering() ? store.get("pr:last") : null;
-  if (!remembering()) { forget("pr:last"); forget("pr:code"); }
+  if (!remembering()) { forget("pr:last"); forget("pr:code"); forget("pr:key"); }
   if (last && last.report && last.report.awards && last.report.awards[0] && "cats" in last.report.awards[0]) {
     state.meta = last.meta || {}; state.checks = last.checks || []; state.pageReviews = last.pageReviews || {}; state.report = last.report; state.sections = last.sections || null;
     state.pages = (last.pages || []).map(p => ({ ...p, thumb: "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="259"><rect width="200" height="259" fill="#eef0f5"/></svg>') }));

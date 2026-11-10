@@ -13,7 +13,7 @@
  *   ACCESS_CODES        (Secret, optional)  comma-separated codes, e.g. "LARGO-16447,TEAM-12345". Empty = no code needed.
  *   ALLOWED_ORIGINS     (Text, recommended) comma-separated sites allowed to call this worker,
  *                                           e.g. "https://woodjame.github.io,https://enbytenprodigeez.org"
- *   MODEL_DEFAULT       (Text, optional)    model for page reviews, default "claude-sonnet-5-5"
+ *   MODEL_DEFAULT       (Text, optional)    model for page reviews, default "claude-haiku-5-5"
  *   MODEL_COMPLEX       (Text, optional)    model for the award + section scoring, default "claude-sonnet-5-5"
  *   MAX_TOKENS          (Text, optional)    longest answer per step, default 16000
  *   DAILY_CALL_LIMIT    (Text, optional)    review steps allowed per access code per day, default 80 (one review ≈ 8 steps)
@@ -68,7 +68,7 @@ export default {
       await env.USAGE.put(key, String(used + 1), { expirationTtl: 60 * 60 * 48 });
     }
 
-    const model = body.tier === "complex" ? (env.MODEL_COMPLEX || "claude-sonnet-5-5") : (env.MODEL_DEFAULT || "claude-sonnet-5-5");
+    const model = body.tier === "complex" ? (env.MODEL_COMPLEX || "claude-sonnet-5-5") : (env.MODEL_DEFAULT || "claude-haiku-5-5");
     const content = [
       ...images.map(data => ({ type: "image", source: { type: "base64", media_type: "image/jpeg", data } })),
       { type: "text", text: prompt }
