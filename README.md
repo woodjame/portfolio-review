@@ -9,6 +9,8 @@ A web page where FIRST Tech Challenge teams upload their engineering portfolio (
 
 Built by Largo Robotics for the 2026-27 BIOBUZZ season.
 
+> **© 2026 Largo Robotics. All rights reserved. Proprietary software.** Teams may use the hosted tool free of charge to review their own portfolios. Copying, modifying, republishing, or selling this tool or any part of it is not permitted without written permission. See [LICENSE](LICENSE).
+
 ---
 
 ## How it works
@@ -54,7 +56,7 @@ Optional settings: `MODEL_DEFAULT` and `MODEL_COMPLEX` choose the Claude model (
 
 ### 3. Put the page on GitHub Pages
 1. On GitHub, create a new **public** repository, e.g. `biobuzz-portfolio-review`.
-2. Click **uploading an existing file** and drag in everything from this folder (`index.html`, `config.js`, `img/`, `worker/`, `README.md`). Then **Commit**.
+2. Click **uploading an existing file** and drag in everything from this folder (`index.html`, `config.js`, `LICENSE`, `README.md`, `img/`, `worker/`). Then **Commit**.
 3. Open `config.js` on GitHub, click the pencil, and set your worker address:
    ```js
    apiUrl: "https://portfolio-review.yourname.workers.dev",
@@ -83,9 +85,13 @@ At Claude Sonnet 5.5 rates ($2 per million input tokens, $10 per million output,
 
 Check current prices on the Claude pricing page, and keep a spend limit set in the Console.
 
-## Privacy notes for teams
+## Privacy
+- The PDF is opened in the team's own browser. The rule check runs there, and the file is never uploaded or stored.
+- Page images and text go through the review server to Claude (Anthropic) for that team's review only, then straight back. The worker has no database and doesn't log content.
+- No team can see another team's portfolio or feedback. There is no shared storage of any kind.
+- Saving the last review on a computer is **off by default** (for shared and school computers). Teams can opt in, and **Clear my review** removes everything.
+- Under Anthropic's commercial API terms, inputs and outputs aren't used for training and are deleted after a short retention period.
 - Students should appear by first name and last initial only. The rule check flags emails and phone numbers.
-- Portfolios are sent to Claude (Anthropic) through the review server to generate feedback. Nothing is stored by this site.
 
 ## Updating
 - Edit `index.html` and commit. GitHub Pages updates within a minute or two.

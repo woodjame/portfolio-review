@@ -1,0 +1,43 @@
+BIOBUZZ Portfolio Review
+Copyright (c) 2026 Largo Robotics. All rights reserved.
+
+This software and everything in this repository, including the source code,
+page design, review method, scoring rubric, section checklists, prompts, text,
+and images (together, the "Software"), is proprietary to Largo Robotics.
+
+PERMITTED USE
+FIRST Tech Challenge teams may use the hosted version of the Software, free of
+charge, to review their own engineering portfolios. Feedback a team receives
+belongs to that team.
+
+RESTRICTIONS
+Without prior written permission from Largo Robotics, you may not:
+  1. copy, reproduce, or download the Software for reuse, except as needed to
+     view it in a web browser;
+  2. modify, adapt, translate, or create derivative works based on the Software;
+  3. republish, host, mirror, distribute, sublicense, rent, or lease the
+     Software, in whole or in part;
+  4. sell the Software or any part of it, or include it in any product,
+     website, app, or service that is sold, licensed, or offered to others,
+     whether or not a fee is charged; or
+  5. remove or alter this notice or any copyright or proprietary notices.
+
+Making this repository publicly viewable does not grant any license beyond the
+permitted use above. No other rights are granted, by implication or otherwise.
+
+NO WARRANTY
+The Software provides automated feedback only. It does not predict or guarantee
+any award result; FIRST judges make all award decisions. THE SOFTWARE IS
+PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT
+SHALL LARGO ROBOTICS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY
+ARISING FROM THE USE OF THE SOFTWARE.
+
+THIRD-PARTY NOTICES
+FIRST(R), FIRST(R) Tech Challenge, and BIOBUZZ(TM) are trademarks of FIRST.
+This Software is not affiliated with, sponsored by, or endorsed by FIRST.
+Award criteria are summarised from the FIRST Tech Challenge Competition Manual.
+The section checklist is adapted from the LOAD Robotics (25609) Starter Port.
+Claude is a product of Anthropic. pdf.js is loaded from a public CDN under its
+own Apache 2.0 license. Illustrations were made with Canva.
+
+Permission requests: enbytenprodigeez.org

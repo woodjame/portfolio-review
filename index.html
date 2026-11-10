@@ -238,6 +238,16 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
 .gate ul.elist { margin-top: 8px; }
 .gate ul.elist li { background: rgba(255,255,255,.55); }
 @media (max-width: 560px) { .rubric > div { grid-template-columns: 1fr; } .scorecell { align-items: flex-start; } }
+.privacy-box { border-top: 1px dashed var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.remember { display: flex; gap: 8px; align-items: center; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.btn-quiet { align-self: flex-start; font-size: 13px; padding: 6px 12px; color: var(--miss); border-color: var(--line); }
+.btn-quiet:hover { border-color: var(--miss); }
+.site-foot { border-top: 4px solid #1B2A4A; background: var(--sheet); padding: 28px clamp(16px, 3vw, 40px) 40px; }
+.foot-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.foot-grid section { display: flex; flex-direction: column; gap: 10px; max-width: 70ch; font-size: 14px; }
+.foot-grid h2 { font-size: 18px; }
+.foot-grid a { color: var(--accent); }
+@media (max-width: 860px) { .foot-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -302,7 +312,12 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
         <button class="btn" id="copy">Copy report</button>
         <button class="btn" id="dl" hidden>Download .md</button>
       </div>
-      <p class="fine">Claude reads your pages and writes the feedback. Judges decide awards, so treat this as a second reader before your event. Your PDF is read in this browser; page images and text are sent to Claude (Anthropic) for the review and aren't saved by this site.</p>
+      <div class="privacy-box">
+        <label class="remember"><input type="checkbox" id="remember"> Save my last review on this computer</label>
+        <p class="fine">Leave this off on shared or school computers. When it's off, your review disappears when you close the page.</p>
+        <button class="btn btn-quiet" id="clear" type="button">Clear my review</button>
+      </div>
+      <p class="fine">Claude reads your pages and writes the feedback. Judges decide awards, so treat this as a second reader before your event. <a href="#privacy" id="privacyLink">How your portfolio stays private</a></p>
     </div>
   </aside>
 
@@ -321,6 +336,29 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
     <section class="view" id="v-awards"></section>
   </main>
 </div>
+
+<footer class="site-foot" id="privacy">
+  <div class="foot-grid">
+    <section>
+      <h2>Your portfolio stays private</h2>
+      <ul class="tight">
+        <li><b>Read in your browser.</b> Your PDF is opened on your own computer. The rule check runs entirely here, and the PDF file itself is never uploaded or stored.</li>
+        <li><b>Sent only to Claude, only for your review.</b> Page images and text are sent to Claude (Anthropic) to write your feedback, then sent straight back to you. On the website version they pass through our review server, which keeps no copy and has no database of portfolios.</li>
+        <li><b>No other team can see it.</b> There is no shared folder, list, or gallery. Every review is separate, and no one, including Largo Robotics, can browse submitted portfolios or feedback.</li>
+        <li><b>Anthropic's API terms.</b> Under Anthropic's commercial API terms, inputs and outputs are not used to train models, and they are deleted after a short retention period.</li>
+        <li><b>On your computer.</b> Your last review is saved in this browser only if you tick "Save my last review on this computer". "Clear my review" removes it at any time.</li>
+        <li><b>Protect student privacy.</b> Use first names and last initials only, as rule A201 asks.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Terms of use</h2>
+      <p><b>© 2026 Largo Robotics. All rights reserved.</b> BIOBUZZ Portfolio Review, including its software, page design, review method, scoring rubric, section checklists, prompts, text and images, is proprietary to Largo Robotics.</p>
+      <p>FIRST Tech Challenge teams may use this tool free of charge to review their own portfolios. You may not copy, reproduce, modify, republish, redistribute, sell, license, rent, or offer this tool or any part of it, whether alone or as part of another product, website or service, or create derivative works from it, without written permission from Largo Robotics. Feedback you receive is yours to use for your team.</p>
+      <p>This tool gives automated feedback only. It does not predict or guarantee any award result; FIRST judges make all award decisions. It is provided "as is", without warranties of any kind.</p>
+      <p class="fine">FIRST®, FIRST® Tech Challenge and BIOBUZZ™ are trademarks of FIRST. This tool is not affiliated with, sponsored by, or endorsed by FIRST. Award criteria are summarised from the FIRST Tech Challenge Competition Manual. Section checklist adapted from the LOAD Robotics (25609) Starter Port. Claude is a product of Anthropic. Illustrations made with Canva. Permission requests: enbytenprodigeez.org.</p>
+    </section>
+  </div>
+</footer>
 
 <script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -465,6 +503,7 @@ const store = {
   get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
+const remembering = () => store.get("pr:remember") === true;
 const state = { file: null, pages: [], checks: [], pageReviews: {}, report: null, sections: null, meta: {}, running: false, abort: null, awardFilter: "all" };
 
 /* ---------- focus award checkboxes ---------- */
@@ -645,8 +684,8 @@ function getSample() {
 }
 if (!IN_CLAUDE && CFG.apiUrl && CFG.requireAccessCode !== false) {
   $("#codeField").hidden = false;
-  const saved = store.get("pr:code"); if (saved) $("#code").value = saved;
-  $("#code").addEventListener("change", () => store.set("pr:code", $("#code").value.trim()));
+  const saved = remembering() ? store.get("pr:code") : null; if (saved) $("#code").value = saved;
+  $("#code").addEventListener("change", () => { if (remembering()) store.set("pr:code", $("#code").value.trim()); });
 }
 function parseJSON(text) {
   if (!text) throw new Error("Empty answer");
@@ -895,7 +934,7 @@ $("#cancel").addEventListener("click", () => { if (state.abort) state.abort.abor
 async function run() {
   if (!state.file || state.running) return;
   if (!$("#codeField").hidden && !accessCode()) { message("Enter your team access code first. Ask Largo Robotics if you don't have one.", true); $("#code").focus(); return; }
-  if (!$("#codeField").hidden) store.set("pr:code", accessCode());
+  if (!$("#codeField").hidden && remembering()) store.set("pr:code", accessCode());
   state.running = true; state.abort = new AbortController();
   $("#run").disabled = true; $("#cancel").hidden = false; $("#progress").hidden = false; $("#exportRow").hidden = true;
   message("");
@@ -967,7 +1006,7 @@ async function run() {
     if (secRes.status === "fulfilled") state.sections = normaliseSections(secRes.value);
     stepState("awards", "done"); bar(1);
     renderAll();
-    store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
+    if (remembering()) store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
     $("#exportRow").hidden = false;
     const notes = [];
     if (failed.length) notes.push(`Pages ${failed.join(", ")} couldn't be reviewed individually, but their text was still used for scoring.`);
@@ -1274,9 +1313,36 @@ $("#dl").addEventListener("click", async () => {
   }
 });
 
-/* ---------- restore last report in this browser ---------- */
+/* ---------- privacy: saving is opt-in, and one click clears everything ---------- */
+function forget(k) { try { localStorage.removeItem(k); } catch {} }
+$("#remember").checked = store.get("pr:remember") === true;
+$("#remember").addEventListener("change", () => {
+  if ($("#remember").checked) {
+    store.set("pr:remember", true);
+    if (state.report) store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
+    if (!$("#codeField").hidden && accessCode()) store.set("pr:code", accessCode());
+    message("Your last review will be saved on this computer.");
+  } else {
+    ["pr:remember", "pr:last", "pr:code"].forEach(forget);
+    message("Nothing will be saved on this computer. Anything saved before has been removed.");
+  }
+});
+$("#clear").addEventListener("click", () => {
+  if (state.running && state.abort) state.abort.abort();
+  ["pr:last", "pr:code"].forEach(forget);
+  state.file = null; state.pages = []; state.checks = []; state.pageReviews = {}; state.report = null; state.sections = null; state.meta = {};
+  $("#file").value = ""; $("#fname").textContent = ""; $("#team").value = ""; if ($("#code")) $("#code").value = "";
+  document.querySelectorAll("#focus input").forEach(i => { i.checked = false; });
+  $("#run").disabled = true; $("#exportRow").hidden = true; $("#progress").hidden = true;
+  renderAll(); showTab("overview");
+  message("Your review was cleared from this page and this computer.");
+});
+$("#privacyLink").addEventListener("click", e => { e.preventDefault(); $("#privacy").scrollIntoView({ behavior: "smooth" }); });
+
+/* ---------- restore last report in this browser (only if the team opted in) ---------- */
 (function restore() {
-  const last = store.get("pr:last");
+  const last = remembering() ? store.get("pr:last") : null;
+  if (!remembering()) { forget("pr:last"); forget("pr:code"); }
   if (last && last.report && last.report.awards && last.report.awards[0] && "cats" in last.report.awards[0]) {
     state.meta = last.meta || {}; state.checks = last.checks || []; state.pageReviews = last.pageReviews || {}; state.report = last.report; state.sections = last.sections || null;
     state.pages = (last.pages || []).map(p => ({ ...p, thumb: "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="259"><rect width="200" height="259" fill="#eef0f5"/></svg>') }));
