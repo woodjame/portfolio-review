@@ -6,3 +6,4 @@ window.PORTFOLIO_REVIEW_CONFIG = {
   requireAccessCode: true,
   maxImagesPerCall: 3
 };
+"https://portfolio-review.yourname.workers.dev"
