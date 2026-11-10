@@ -226,6 +226,7 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
 .section-card .gap h4, .pagecard h4 { margin: 0 0 4px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 .glance { font-size: 14px; background: var(--honey-soft); border-radius: 8px; padding: 8px 10px; }
 .chip-thin { background: var(--part-bg); color: var(--part); }
+.chip-src { background: var(--honey-soft); color: var(--ink); }
 .pips { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
 .pips i { width: 11px; height: 12px; background: var(--line); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
 .pips.s5 i.on, .pips.s4 i.on { background: var(--ok); }
@@ -1544,6 +1545,31 @@ For each frame, note only what you can actually see: how many students are visib
 
 Return ONLY JSON: {"frames":[{"t":"<m:ss>","note":"<1-2 sentences>"}]}`;
 }
+const QUESTION_SHAPE = `[{"q":"<the question, worded the way a judge would ask it>","category":"MCI|TA|Think|Inspire","award":"<award id>","basedOn":{"type":"portfolio|presentation","page":<portfolio page number or null>,"detail":"<the specific thing in their portfolio or presentation that prompts this question>"},"why":"<what the judge is trying to find out>","strongAnswer":["<what a strong answer includes>"],"who":"<which student role should answer>"}]`;
+const QUESTION_RULES = `- questions: 6 to 8 questions that judges are likely to ask THIS team, each prompted by something specific in their portfolio pages or their 5-minute presentation: a claim to back up, a mechanism or sensor to explain, a number to explain, a decision to justify, a gap or vague spot, or something interesting judges would want to hear more about. Fill in basedOn for every question.
+- Make the first two one MCI and one TA, like the two Question Bank questions that open the Q&A, but still tied to the team's own content. Then spread the rest across the team's target awards and weakest required criteria.
+- Write them as a judge would ask them: open-ended, friendly, one question at a time. Don't claim they are official Question Bank questions. Never invent things the team didn't say or show.`;
+function questionsPrompt(input) {
+  const pages = Object.entries(state.pageReviews).sort((a, b) => a[0] - b[0]).map(([n, r]) => `p.${n} "${r.title}": ${r.summary} ${r.glance ? "Skim: " + r.glance : ""}`).join("\n");
+  const texts = (state.pages || []).filter(p => p.n > 1 && p.text).map(p => `--- p.${p.n} ---\n${p.text.slice(0, 900)}`).join("\n").slice(0, 14000);
+  return `You are an experienced FIRST Tech Challenge judge getting ready to interview a student team. Season: 2026-27 BIOBUZZ. ${ivContext()}
+
+${INTERVIEW_RULES}
+
+Award criteria:
+${CRITERIA_TEXT}
+
+${portfolioContext()}
+
+Portfolio pages (from the portfolio review): ${pages ? "\n" + pages : "none"}
+${texts ? "Portfolio page text (partial):\n" + texts : ""}
+
+Their 5-minute presentation (talking points or transcript): ${input.text ? `\n"""\n${input.text.slice(0, 15000)}\n"""` : "none"}
+
+Write the questions you would ask this team in the Q&A part of the interview. Return ONLY JSON: {"questions":${QUESTION_SHAPE}}
+
+${QUESTION_RULES}`;
+}
 function interviewPrompt(input) {
   const st = input.stats;
   return `You are an experienced FIRST Tech Challenge judge coaching a student team on their judging-interview presentation before their next event. Season: 2026-27 BIOBUZZ. ${ivContext()}
@@ -1567,13 +1593,13 @@ Score each dimension 1–5 on the same evidence scale used for portfolios (5 = e
 Dimensions: ${IV_DIMS.map(d => `${d.id} = ${d.name}: ${d.desc}`).join(" | ")}
 
 Return ONLY a JSON object, no prose:
-{"summary":"<3-4 sentences on how this presentation would land with judges>","scores":[{"id":"<dimension id>","score":<1-5 or null>,"why":"<what you saw, quoting specifics>","improve":"<the change that would raise it by a point>"}],"strengths":["<2-4 specific strengths>"],"improvements":[{"title":"<short imperative>","how":"<concrete steps; quote lines to cut or rewrite where useful>","why":"<which award criteria or rule it helps>"}],"runOfShow":[{"segment":"<part of the presentation>","seconds":<number>,"speaker":"<role or first name>","points":["<key points to hit>"]}],"awardCoverage":[{"award":"<award id>","level":"strong|partial|missing","note":"<what the presentation says or should add>"}],"deliveryNotes":[{"t":"<m:ss or empty>","note":"<specific delivery observation or tip>"}],"questions":[{"q":"<a question judges are likely to ask>","category":"MCI|TA|Think|Inspire","award":"<award id>","why":"<why judges would ask this team this>","strongAnswer":["<what a strong answer includes>"],"who":"<which student role should answer>"}]}
+{"summary":"<3-4 sentences on how this presentation would land with judges>","scores":[{"id":"<dimension id>","score":<1-5 or null>,"why":"<what you saw, quoting specifics>","improve":"<the change that would raise it by a point>"}],"strengths":["<2-4 specific strengths>"],"improvements":[{"title":"<short imperative>","how":"<concrete steps; quote lines to cut or rewrite where useful>","why":"<which award criteria or rule it helps>"}],"runOfShow":[{"segment":"<part of the presentation>","seconds":<number>,"speaker":"<role or first name>","points":["<key points to hit>"]}],"awardCoverage":[{"award":"<award id>","level":"strong|partial|missing","note":"<what the presentation says or should add>"}],"deliveryNotes":[{"t":"<m:ss or empty>","note":"<specific delivery observation or tip>"}],"questions":${QUESTION_SHAPE}}
 
 Rules:
 - improvements: 4-7, ranked by impact. Fix rule problems first (over ~5 minutes, only one student speaking), then gaps on REQUIRED criteria for the team's target awards (especially awards that don't need a portfolio, and Inspire 3-4), then specifics and delivery.
 - runOfShow: a recommended plan for this team that totals 270-300 seconds, with a speaker for each part and a hand-off to several students. Base it on their own content.
 - awardCoverage: include all 8 award ids.
-- questions: 10 questions. The first two must be in the style of the Question Bank openers: one MCI, one TA. The rest target this team's weak spots and target awards. Write them as a judge would ask them. Don't claim they are the official Question Bank questions.
+${QUESTION_RULES}
 - Never invent things the team did; base feedback on what they gave you. Be direct, encouraging and specific; this is for students.`;
 }
 function answerPrompt(q, answer) {
@@ -1648,6 +1674,28 @@ $("#ivRun").addEventListener("click", async () => {
     $("#ivStatus").textContent = errText(err);
   } finally { iv.running = false; $("#ivRun").disabled = false; }
 });
+function cleanQuestions(list) {
+  return (Array.isArray(list) ? list : []).filter(q => q && q.q).slice(0, 8).map(q => ({ ...q, basedOn: q.basedOn && typeof q.basedOn === "object" ? { type: q.basedOn.type === "portfolio" ? "portfolio" : "presentation", page: Number.isFinite(+q.basedOn.page) && +q.basedOn.page > 0 ? +q.basedOn.page : null, detail: String(q.basedOn.detail || "") } : null }));
+}
+/* Generate questions on their own: from the portfolio review and/or the talking points or transcript */
+async function generateQuestions(btn) {
+  const text = $("#ivTranscript").value.trim() || $("#ivText").value.trim();
+  const hasPortfolio = Object.keys(state.pageReviews).length > 0 || !!state.report;
+  const say = t => { $("#ivStatus").textContent = t; const q = $("#qgenStatus"); if (q) q.textContent = t; };
+  if (!hasPortfolio && !text) { say("Run the portfolio review first, or add talking points or a transcript above, so the questions can be based on your work."); return; }
+  const sample = await requireConnection(); if (!sample) { say($("#ivStatus").textContent); return; }
+  if (btn) btn.disabled = true;
+  say("Writing practice questions from your " + (hasPortfolio && text ? "portfolio and presentation" : hasPortfolio ? "portfolio" : "presentation") + "…");
+  try {
+    const r = await askJSON(sample, questionsPrompt({ text }), { modelTier: "complex" });
+    iv.questions = cleanQuestions(r.questions); iv.answers = {}; iv.feedback = {};
+    renderInterview(); saveIfRemembering(); $("#exportRow").hidden = false;
+    say(iv.questions.length ? `Done: ${iv.questions.length} practice questions below.` : "Claude didn't return any questions. Try again.");
+    const qp = document.getElementById("ivQuestions"); if (qp) qp.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) { say(errText(err)); }
+  finally { if (btn) btn.disabled = false; }
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-qgen]"); if (b) generateQuestions(b); });
 function normaliseInterview(r, input) {
   const sm = Object.fromEntries((r.scores || []).map(s => [s.id, s]));
   const scores = IV_DIMS.map(d => { const g = sm[d.id] || {}; const n = clampScore(g.score); return { id: d.id, score: (d.id === "delivery" && !input.duration && !input.transcript) ? null : n, why: g.why || "", improve: g.improve || "" }; });
@@ -1655,7 +1703,7 @@ function normaliseInterview(r, input) {
   return {
     summary: r.summary || "", scores, overall: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null,
     strengths: r.strengths || [], improvements: r.improvements || [], runOfShow: (r.runOfShow || []).map(x => ({ ...x, seconds: Number(x.seconds) || 0 })),
-    awardCoverage: r.awardCoverage || [], deliveryNotes: r.deliveryNotes || [], questions: (r.questions || []).filter(q => q && q.q),
+    awardCoverage: r.awardCoverage || [], deliveryNotes: r.deliveryNotes || [], questions: cleanQuestions(r.questions),
     stats: input.stats, duration: input.duration || null, hadVideo: !!input.duration, hadTranscript: !!input.transcript, students: input.students,
     frames: (iv.frames || []).map(f => ({ t: f.t, thumb: f.thumb })), frameNotes: input.frameNotes || []
   };
@@ -1690,7 +1738,8 @@ function renderInterview() {
   const r = iv.result;
   $("#c-interview").textContent = r && r.overall ? r.overall + "/5" : "";
   const R = $("#ivResults"), Q = $("#ivQuestions");
-  if (!r) { R.innerHTML = ""; Q.innerHTML = ""; return; }
+  renderQuestions(Q);
+  if (!r) { R.innerHTML = ""; return; }
   const st = r.stats || {};
   const secs = r.duration || st.estSeconds || 0;
   const pct = Math.min(100, secs / 420 * 100), over = secs > 315;
@@ -1715,29 +1764,48 @@ function renderInterview() {
     ${r.runOfShow.length ? `<div class="panel"><div class="row" style="justify-content:space-between"><h2>Recommended 5-minute plan</h2><span class="mono muted">total ${fmtTime(r.runOfShow.reduce((a, x) => a + x.seconds, 0))}</span></div><div class="tablewrap"><table class="ros"><thead><tr><th>Time</th><th>Part</th><th>Who</th><th>Hit these points</th></tr></thead><tbody>${(() => { let t = 0; return r.runOfShow.map(x => { const row = `<tr><td class="t">${fmtTime(t)}–${fmtTime(t + x.seconds)}</td><td><b>${esc(x.segment)}</b></td><td>${esc(x.speaker || "")}</td><td><ul class="tight">${(x.points || []).map(p => `<li>${esc(p)}</li>`).join("")}</ul></td></tr>`; t += x.seconds; return row; }).join(""); })()}</tbody></table></div></div>` : ""}
     ${r.awardCoverage.length ? `<div class="panel"><h2>Award coverage in your presentation</h2><ul class="elist">${r.awardCoverage.filter(a => AWARD_BY_ID[a.award]).map(a => `<li><span><b>${esc(AWARD_BY_ID[a.award].name)}</b> <span class="fine">· ${esc(a.note || "")}</span></span>${pill({ strong: "ok", partial: "part", missing: "missing" }[a.level] || "pending", { strong: "Strong", partial: "Partly", missing: "Missing" }[a.level] || "–")}</li>`).join("")}</ul></div>` : ""}
     ${r.frames.length || r.deliveryNotes.length ? `<div class="panel" style="display:flex;flex-direction:column;gap:12px"><h2>Delivery notes</h2>${r.deliveryNotes.length ? `<ul class="tight">${r.deliveryNotes.map(n => `<li>${n.t ? `<span class="mono">${esc(n.t)}</span> ` : ""}${esc(n.note)}</li>`).join("")}</ul>` : ""}${r.frames.length ? `<div class="frames">${r.frames.map(f => { const note = (r.frameNotes || []).find(n => n.t === fmtTime(f.t)); return `<figure>${f.thumb ? `<img src="${f.thumb}" alt="Frame at ${fmtTime(f.t)}">` : ""}<figcaption><span class="mono">${fmtTime(f.t)}</span> ${esc(note ? note.note : "")}</figcaption></figure>`; }).join("")}</div>` : ""}</div>` : ""}`;
-  Q.innerHTML = iv.questions.length ? `<div class="panel" style="display:flex;flex-direction:column;gap:14px">
-    <h2>Practise the Q&amp;A</h2>
-    <p class="muted">Questions written in the style of the judges' Question Bank and aimed at your gaps. They are not the official questions, so also review the official Judge Interview Question Bank. Type or paste your answer the way you'd say it, then check it.</p>
+}
+function renderQuestions(Q) {
+  const hasPortfolio = Object.keys(state.pageReviews).length > 0 || !!state.report;
+  if (!iv.questions.length) {
+    Q.innerHTML = `<div class="panel" style="display:flex;flex-direction:column;gap:10px">
+      <h2>Practise the Q&amp;A</h2>
+      <p class="muted">Get 6–8 questions judges are likely to ask your team, each based on something in your portfolio or your 5-minute presentation. ${hasPortfolio ? "Your portfolio review is ready to use." : "Run the portfolio review first, or add talking points or a transcript above."} Getting presentation feedback also creates questions automatically.</p>
+      <div class="row"><button class="btn primary" type="button" data-qgen>Generate practice questions</button><span class="fine" id="qgenStatus"></span></div>
+    </div>`;
+    return;
+  }
+  const src = q => q.basedOn ? (q.basedOn.type === "portfolio" ? `From your portfolio${q.basedOn.page ? " · p." + q.basedOn.page : ""}` : "From your presentation") : "";
+  Q.innerHTML = `<div class="panel" style="display:flex;flex-direction:column;gap:14px">
+    <div class="row" style="justify-content:space-between"><h2>Practise the Q&amp;A</h2><div class="row"><span class="fine" id="qgenStatus"></span><button class="btn" type="button" data-qgen>New set of questions</button></div></div>
+    <p class="muted">${iv.questions.length} questions judges may ask, each based on your portfolio or presentation. The first two mirror the opening Question Bank questions (one Machine, Creativity &amp; Innovation, one Team Attributes); they're not the official questions, so review the official Judge Interview Question Bank too. Type or paste your answer the way you'd say it, then check it.</p>
     ${iv.questions.map((q, i) => `<div class="qcard">
-      <div class="row"><span class="chip">${esc(q.category || "")}</span>${q.award && AWARD_BY_ID[q.award] ? `<span class="chip">${esc(AWARD_BY_ID[q.award].name.replace(" Award", ""))}</span>` : ""}${i < 2 ? '<span class="chip chip-thin">Question Bank style opener</span>' : ""}</div>
+      <div class="row">${q.basedOn ? `<span class="chip chip-src">${esc(src(q))}</span>` : ""}<span class="chip">${esc(q.category || "")}</span>${q.award && AWARD_BY_ID[q.award] ? `<span class="chip">${esc(AWARD_BY_ID[q.award].name.replace(" Award", ""))}</span>` : ""}</div>
       <p class="q">${i + 1}. ${esc(q.q)}</p>
+      ${q.basedOn && q.basedOn.detail ? `<p class="fine"><b>Why you'll get this:</b> ${esc(q.basedOn.detail)}${q.basedOn.page ? " " + prefs([q.basedOn.page]) : ""}</p>` : ""}
       <p class="fine">${esc(q.why || "")}${q.who ? ` · Suggested speaker: ${esc(q.who)}` : ""}</p>
       <details><summary>What a strong answer includes</summary><ul class="tight">${(q.strongAnswer || []).map(x => `<li>${esc(x)}</li>`).join("")}</ul></details>
       <textarea id="ans-${i}" rows="3" placeholder="Your answer…">${esc(iv.answers[i] || "")}</textarea>
       <div class="row"><button class="btn" type="button" data-check="${i}">Check my answer</button></div>
       <div id="fb-${i}">${iv.feedback[i] ? answerFeedbackHTML(iv.feedback[i]) : ""}</div>
     </div>`).join("")}
-  </div>` : "";
+  </div>`;
 }
 function interviewMarkdown() {
-  const r = iv.result; if (!r) return [];
+  const r = iv.result;
+  if (!r) return iv.questions.length ? questionsMarkdown("## Interview practice questions") : [];
   const L = ["## Interview prep", "", r.summary || "", "", `Length: ${fmtTime(r.duration || (r.stats || {}).estSeconds)} · Words: ${(r.stats || {}).words || 0}${(r.stats || {}).wpm ? " · " + r.stats.wpm + " wpm" : ""} · Filler words: ${(r.stats || {}).fillerTotal || 0}`, ""];
   IV_DIMS.forEach(d => { const s = r.scores.find(x => x.id === d.id) || {}; L.push(`- **${d.name}: ${s.score ? s.score + "/5" : "–"}** ${s.why || ""}${s.improve ? " → " + s.improve : ""}`); });
   if (r.improvements.length) { L.push("", "### Change before your event"); r.improvements.forEach((x, i) => L.push(`${i + 1}. **${x.title}** — ${x.how} ${x.why || ""}`)); }
   if (r.runOfShow.length) { L.push("", "### Recommended 5-minute plan"); let t = 0; r.runOfShow.forEach(x => { L.push(`- ${fmtTime(t)}–${fmtTime(t + x.seconds)} **${x.segment}** (${x.speaker || ""}): ${(x.points || []).join("; ")}`); t += x.seconds; }); }
-  if (iv.questions.length) { L.push("", "### Practice questions"); iv.questions.forEach((q, i) => { L.push(`${i + 1}. ${q.q} (${q.category || ""})`, `   - Strong answer includes: ${(q.strongAnswer || []).join("; ")}`); if (iv.feedback[i]) L.push(`   - Your practice answer: ${iv.feedback[i].score || "–"}/5. Improve: ${iv.feedback[i].improve.join("; ")}`); }); }
+  if (iv.questions.length) L.push("", ...questionsMarkdown("### Practice questions"));
   L.push("");
   return L;
+}
+function questionsMarkdown(heading) {
+  const L = [heading, ""];
+  iv.questions.forEach((q, i) => { L.push(`${i + 1}. ${q.q} (${q.category || ""}${q.basedOn ? "; " + (q.basedOn.type === "portfolio" ? "from portfolio" + (q.basedOn.page ? " p." + q.basedOn.page : "") : "from presentation") : ""})`); if (q.basedOn && q.basedOn.detail) L.push(`   - Why you'll get this: ${q.basedOn.detail}`); L.push(`   - Strong answer includes: ${(q.strongAnswer || []).join("; ")}`); if (iv.feedback[i]) L.push(`   - Your practice answer: ${iv.feedback[i].score || "–"}/5. Improve: ${iv.feedback[i].improve.join("; ")}`); });
+  L.push(""); return L;
 }
 function saveIfRemembering() {
   if (!remembering()) return;
@@ -1860,7 +1928,7 @@ $("#privacyLink").addEventListener("click", e => { e.preventDefault(); $("#priva
 (function restore() {
   const last = remembering() ? store.get("pr:last") : null;
   if (!remembering()) { forget("pr:last"); forget("pr:code"); forget("pr:key"); }
-  if (last && last.interview && last.interview.result) {
+  if (last && last.interview && (last.interview.result || (last.interview.questions || []).length)) {
     $("#exportRow").hidden = false;
     iv.result = last.interview.result; iv.questions = last.interview.questions || []; iv.answers = last.interview.answers || {}; iv.feedback = last.interview.feedback || {};
   }

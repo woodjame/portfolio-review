@@ -9,7 +9,7 @@ A web page where FIRST Tech Challenge teams upload their engineering portfolio (
 - **Interview prep**
   - A summary of the judging-interview rules (A203–A210).
   - Feedback on a team's 5-minute presentation from their talking points (paste, .txt, .md, .pdf or .docx), a practice video, and/or a transcript, scored 1–5 on six areas, with a recommended 5-minute plan and award coverage.
-  - Practice questions written in the style of the Question Bank, with feedback on each answer.
+  - 6–8 practice questions judges are likely to ask, each tied to a specific page of the team's portfolio or a point in their presentation (with a "Why you'll get this" note), and feedback on each practice answer. Questions can come from the portfolio review alone.
   - Practice videos never leave the team's computer; only a few still frames are sent to Claude.
 
 Built by Largo Robotics for the 2026-27 BIOBUZZ season.
