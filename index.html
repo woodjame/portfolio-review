@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIOBUZZ Portfolio Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a judging desk in a hive — honeycomb header with the Canva artwork, controls on the left, feedback on the right organised the way judges read: rules → pages → awards. Palette sampled from the Canva illustrations. */
+:root {
+  --bg: #FBF7EC;
+  --sheet: #FFFFFF;
+  --ink: #1B2A4A;
+  --muted: #5B6680;
+  --line: #E9E1CC;
+  --accent: #1F4E8C;
+  --accent-soft: #E6EEF9;
+  --honey: #F4B41A;
+  --honey-soft: #FFF1C9;
+  --teal: #2E8F8C; --teal-soft: #DDF1EF;
+  --coral: #E06A4E; --coral-soft: #FCE6DF;
+  --hive-line: rgba(27, 42, 74, .08);
+  --ok: #1D7A4B; --ok-bg: #E2F3E9;
+  --part: #9C5B00; --part-bg: #FCEFD8;
+  --miss: #B42318; --miss-bg: #FBE4E1;
+  --intv: #4B5590; --intv-bg: #E9EBF5;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1526; --sheet: #172036; --ink: #EEF0F6; --muted: #A3ABC2; --line: #2B3653;
+    --accent: #8EB2F0; --accent-soft: #1D2B4D; --honey: #F6BE36; --honey-soft: #3A2E10;
+    --teal: #5CC3BF; --teal-soft: #123734; --coral: #F28B70; --coral-soft: #3D1E17; --hive-line: rgba(246, 190, 54, .07);
+    --ok: #5CC48E; --ok-bg: #11301F; --part: #F1B451; --part-bg: #33250C;
+    --miss: #F2806F; --miss-bg: #3A1814; --intv: #AEB6E8; --intv-bg: #23284A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1526; --sheet: #172036; --ink: #EEF0F6; --muted: #A3ABC2; --line: #2B3653;
+  --accent: #8EB2F0; --accent-soft: #1D2B4D; --honey: #F6BE36; --honey-soft: #3A2E10;
+  --teal: #5CC3BF; --teal-soft: #123734; --coral: #F28B70; --coral-soft: #3D1E17; --hive-line: rgba(246, 190, 54, .07);
+  --ok: #5CC48E; --ok-bg: #11301F; --part: #F1B451; --part-bg: #33250C;
+  --miss: #F2806F; --miss-bg: #3A1814; --intv: #AEB6E8; --intv-bg: #23284A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font-body); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 24px; }
+h2 { font-size: 19px; }
+h3 { font-size: 16px; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-size: 12.5px; }
+.muted { color: var(--muted); }
+
+body { background-color: var(--bg); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 0 56 16v32L28 64 0 48V16zM28 64v33M0 48l-28 16M56 48l28 16' fill='none' stroke='%23F4B41A' stroke-opacity='.13' stroke-width='1.2'/%3E%3C/svg%3E"); }
+header.top { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 26px clamp(16px, 3vw, 40px); background: linear-gradient(115deg, var(--honey) 0%, #F9CF5C 48%, var(--honey-soft) 100%); color: #1B2A4A; border-bottom: 4px solid #1B2A4A; }
+header.top::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 0 56 16v32L28 64 0 48V16zM28 64v33M0 48l-28 16M56 48l28 16' fill='none' stroke='%231B2A4A' stroke-opacity='.1' stroke-width='1.4'/%3E%3C/svg%3E"); }
+header.top > * { position: relative; z-index: 1; }
+header.top .brand { display: flex; gap: 16px; align-items: center; }
+.mark { width: 52px; height: 52px; flex: none; filter: drop-shadow(0 3px 0 rgba(27,42,74,.25)); }
+header.top h1 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -.01em; }
+header.top .sub { color: #2C3A5A; font-size: 14.5px; max-width: 62ch; margin-top: 4px; }
+header.top .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+header.top .tags span { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.7); color: #1B2A4A; }
+.hero { width: 300px; aspect-ratio: 2 / 1; border-radius: 16px; overflow: hidden; border: 3px solid #1B2A4A; box-shadow: 6px 6px 0 #1B2A4A; transform: rotate(1.5deg); background: #FFF1C9; }
+.hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 760px) { header.top { grid-template-columns: 1fr; } .hero { width: min(100%, 300px); transform: none; } }
+
+.desk { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 20px; padding: 20px clamp(16px, 3vw, 32px) 48px; max-width: 1400px; margin: 0 auto; }
+@media (max-width: 920px) { .desk { grid-template-columns: 1fr; } }
+.panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: 0 1px 0 var(--line), 0 6px 18px -12px rgba(27,42,74,.25); }
+aside .panel { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 16px; }
+@media (max-width: 920px) { aside .panel { position: static; } }
+
+.drop { border: 2px dashed var(--honey); border-radius: 14px; padding: 16px 14px 18px; text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center; cursor: pointer; background: var(--honey-soft); transition: border-color .15s, background .15s, transform .15s; }
+.drop img { width: 112px; height: 112px; border-radius: 50%; background: #fff; border: 3px solid var(--sheet); box-shadow: 0 0 0 2px var(--honey); object-fit: cover; }
+.drop:hover, .drop.over { border-color: var(--teal); background: var(--teal-soft); transform: translateY(-1px); }
+.drop strong { font-weight: 600; }
+.drop .file { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); word-break: break-all; }
+#file { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label, .legend { font-size: 13px; font-weight: 600; }
+.field input[type=text], .field select { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 8px 10px; }
+.checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 13.5px; }
+.checks label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+
+.btn { border: 1px solid var(--line); background: var(--sheet); border-radius: 7px; padding: 9px 14px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--honey); color: #1B2A4A; border: 2px solid #1B2A4A; box-shadow: 3px 3px 0 #1B2A4A; border-radius: 10px; padding: 9px 18px; }
+.btn.primary:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #1B2A4A; }
+.btn.primary:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #1B2A4A; }
+.btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.progress { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; }
+.step { display: flex; gap: 8px; align-items: baseline; color: var(--muted); }
+.step .dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--line); flex: none; transform: translateY(1px); }
+.step.active { color: var(--ink); font-weight: 600; }
+.step.active .dot { border-color: var(--honey); background: var(--honey); box-shadow: 0 0 0 3px var(--honey-soft); }
+.step.done .dot { background: var(--ok); border-color: var(--ok); }
+.step.fail .dot { background: var(--miss); border-color: var(--miss); }
+.bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bar { height: 8px !important; border-radius: 4px !important; }
+.bar > i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg, var(--honey) 0 10px, #F9CF5C 10px 20px); transition: width .3s; }
+.notice { font-size: 13px; padding: 10px 12px; border-radius: 7px; background: var(--accent-soft); }
+.notice.err { background: var(--miss-bg); color: var(--miss); }
+.fine { font-size: 12.5px; color: var(--muted); }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 18px; overflow-x: auto; padding: 5px; background: var(--sheet); border: 1px solid var(--line); border-radius: 999px; width: fit-content; max-width: 100%; }
+.tab { border: 0; background: none; padding: 8px 16px; cursor: pointer; font-weight: 600; color: var(--muted); border-radius: 999px; white-space: nowrap; transition: background .15s, color .15s; }
+.tab:hover { color: var(--ink); background: var(--honey-soft); }
+.tab[aria-selected="true"] { color: #1B2A4A; background: var(--honey); }
+.tab[aria-selected="true"] .count { color: #1B2A4A; }
+.tab .count { font-family: var(--font-mono); font-size: 11.5px; margin-left: 4px; color: var(--muted); }
+.view { display: none; flex-direction: column; gap: 16px; }
+.view.on { display: flex; }
+
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.s-ok, .s-shown, .s-strong, .s-pass, .s-good { color: var(--ok); background: var(--ok-bg); }
+.s-part, .s-partial, .s-competitive, .s-developing, .s-warn, .s-fair { color: var(--part); background: var(--part-bg); }
+.s-missing, .s-not_shown, .s-fail, .s-poor { color: var(--miss); background: var(--miss-bg); }
+.s-interview, .s-info, .s-pending, .s-na { color: var(--intv); background: var(--intv-bg); }
+
+.grid-awards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.tile { --c: var(--accent); --cs: var(--accent-soft); position: relative; border: 1px solid var(--line); border-top: 6px solid var(--c); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; background: linear-gradient(180deg, var(--cs) 0, var(--sheet) 70%); cursor: pointer; text-align: left; transition: transform .15s, box-shadow .15s; }
+.tile:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -14px rgba(27,42,74,.5); }
+.c-mci { --c: var(--teal); --cs: var(--teal-soft); }
+.c-ta { --c: var(--coral); --cs: var(--coral-soft); }
+.c-think { --c: var(--honey); --cs: var(--honey-soft); }
+.c-inspire { --c: var(--accent); --cs: var(--accent-soft); }
+.tile .hex { position: absolute; top: 10px; right: 12px; width: 26px; height: 30px; background: var(--c); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); opacity: .9; }
+.tile .cat { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--c); font-weight: 700; padding-right: 30px; }
+.tile h3 { font-size: 15px; }
+.tile.r-strong { border-left-color: var(--ok); }
+.tile.r-competitive { border-left-color: var(--part); }
+.tile.r-developing { border-left-color: var(--part); }
+.tile.r-not_shown { border-left-color: var(--miss); }
+.tile.r-pending { border-left-color: var(--line); }
+.star { color: var(--honey); font-size: 13px; }
+
+.fixes { counter-reset: fx; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.fixes li { counter-increment: fx; display: grid; grid-template-columns: 28px 1fr; gap: 10px; }
+.fixes li::before { content: counter(fx); font-family: var(--font-mono); font-weight: 500; width: 26px; height: 28px; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: var(--honey); color: #1B2A4A; display: grid; place-items: center; font-size: 12.5px; }
+.fixes .t { font-weight: 600; }
+
+table.rules { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tablewrap { overflow-x: auto; }
+table.rules th, table.rules td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.rules th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+table.rules td:first-child { white-space: nowrap; }
+
+.pagecard { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 16px; scroll-margin-top: 12px; }
+@media (max-width: 560px) { .pagecard { grid-template-columns: 1fr; } }
+.pagecard img { width: 100%; max-width: 150px; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
+.pagecard .body { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; padding: 2px 9px; border-radius: 999px; background: var(--teal-soft); color: var(--teal); font-weight: 600; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 700px) { .two { grid-template-columns: 1fr; } }
+.two h4, .award h4 { margin: 0 0 4px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+ul.tight { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.pagecard.flash { box-shadow: 0 0 0 2px var(--accent); }
+
+.award { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 12px; border-top: 6px solid var(--c); }
+.award .head h2 { display: flex; align-items: center; gap: 10px; }
+.award .head h2::before { content: ""; width: 20px; height: 23px; flex: none; background: var(--c); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.award .sug { border-left-color: var(--c) !important; background: var(--cs); padding: 8px 10px !important; border-radius: 0 8px 8px 0; }
+.banner { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 18px; align-items: center; background: linear-gradient(110deg, var(--honey-soft), var(--sheet) 70%); }
+.banner img { width: 120px; height: 120px; border-radius: 50%; background: #fff; border: 3px solid var(--honey); object-fit: cover; }
+@media (max-width: 520px) { .banner { grid-template-columns: 1fr; } }
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.how > div { border-radius: 14px; padding: 14px; background: var(--cs); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+.how .n { width: 30px; height: 34px; display: grid; place-items: center; background: var(--c); color: #fff; font-family: var(--font-mono); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.award .head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.award .head .meta { font-size: 13px; color: var(--muted); }
+.crit { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); }
+.crit .num { font-family: var(--font-mono); color: var(--muted); }
+.crit .req { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.crit .ev { font-size: 14px; margin-top: 6px; }
+.crit .sug { font-size: 14px; margin-top: 6px; padding-left: 10px; border-left: 3px solid var(--accent); }
+@media (max-width: 560px) { .crit { grid-template-columns: 28px minmax(0, 1fr); } .crit > .pill { grid-column: 2; justify-self: start; } }
+a.pref { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); text-decoration: none; background: var(--accent-soft); padding: 0 5px; border-radius: 4px; cursor: pointer; }
+a.pref:hover { text-decoration: underline; }
+.empty { padding: 28px; text-align: center; color: var(--muted); }
+.lede { max-width: 70ch; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.filters button { border: 1px solid var(--line); background: var(--sheet); border-radius: 999px; padding: 4px 12px; font-size: 13px; cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--accent); color: var(--sheet); border-color: var(--accent); }
+.legend-row { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted); }
+.legend-row b { color: var(--ink); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.stat { border-radius: 12px; padding: 12px 14px; background: var(--teal-soft); display: flex; flex-direction: column; gap: 2px; }
+.stat b { font-family: var(--font-display); font-size: 28px; line-height: 1; color: var(--teal); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--muted); }
+.stat.warnish { background: var(--coral-soft); }
+.stat.warnish b { color: var(--coral); }
+.gate { border-radius: 10px; padding: 10px 14px; font-size: 14px; border-left: 5px solid; }
+.g-block { background: var(--miss-bg); border-color: var(--miss); }
+.g-risk { background: var(--part-bg); border-color: var(--part); }
+.g-ok { background: var(--ok-bg); border-color: var(--ok); }
+h4.grp { margin: 4px 0 0; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--c); }
+.crit.is-req .num { color: var(--ink); font-weight: 600; }
+ul.parts { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+ul.parts li, ul.elist li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; font-size: 14px; padding: 6px 8px; border-radius: 8px; background: var(--bg); }
+ul.parts li .mono { font-weight: 600; color: var(--c); }
+ul.elist { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+ul.elist li { grid-template-columns: minmax(0, 1fr) auto; }
+details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var(--accent); }
+.section-card { display: flex; flex-direction: column; gap: 10px; }
+.section-card .head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+.section-card .head .chips { margin-top: 6px; }
+.section-card .gap { background: var(--coral-soft); border-radius: 10px; padding: 10px 12px; }
+.section-card .gap h4, .pagecard h4 { margin: 0 0 4px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.glance { font-size: 14px; background: var(--honey-soft); border-radius: 8px; padding: 8px 10px; }
+.chip-thin { background: var(--part-bg); color: var(--part); }
+.pips { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+.pips i { width: 11px; height: 12px; background: var(--line); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.pips.s5 i.on, .pips.s4 i.on { background: var(--ok); }
+.pips.s3 i.on { background: var(--honey); }
+.pips.s2 i.on, .pips.s1 i.on { background: var(--miss); }
+.pips b { font-family: var(--font-mono); font-size: 12px; font-weight: 500; margin-left: 5px; color: var(--ink); }
+.scorecell { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.rubric { display: grid; gap: 6px; margin-top: 10px; font-size: 13.5px; }
+.rubric > div { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px; align-items: start; }
+.gate ul.elist { margin-top: 8px; }
+.gate ul.elist li { background: rgba(255,255,255,.55); }
+@media (max-width: 560px) { .rubric > div { grid-template-columns: 1fr; } .scorecell { align-items: flex-start; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 2 30 9.5v15L17 32 4 24.5v-15z" fill="#1B2A4A"/><path d="M11 13h12M11 17h12M11 21h8" stroke="#F4B41A" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <div>
+      <h1>BIOBUZZ Portfolio Review</h1>
+      <p class="sub">Upload your engineering portfolio PDF. You get a rule check, a section-by-section checklist of what judges expect, page-by-page notes, and a criterion-by-criterion read for every judged award (Competition Manual TU06, Section 6).</p>
+      <div class="tags"><span>Rule A201 check</span><span>15 section checklists</span><span>Required-criteria gate</span><span>8 judged awards</span><span>Interview prep</span></div>
+    </div>
+  </div>
+  <div class="hero"><img src="img/hero.webp" alt="Illustration of honeybees around a robot holding an engineering portfolio"></div>
+</header>
+
+<div class="desk">
+  <aside>
+    <div class="panel">
+      <label class="drop" id="drop" for="file">
+        <img src="img/upload.webp" alt="" aria-hidden="true">
+        <strong>Drop your portfolio PDF here</strong>
+        <span class="fine">or click to choose a file · cover page + up to 15 pages</span>
+        <span class="file" id="fname"></span>
+      </label>
+      <input type="file" id="file" accept="application/pdf,.pdf">
+
+      <div class="field">
+        <label for="team">Team number</label>
+        <input type="text" id="team" placeholder="e.g. 12345" inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="level">Next event</label>
+        <select id="level">
+          <option value="League Meet / Qualifier">League Meet or Qualifier</option>
+          <option value="League Tournament">League Tournament</option>
+          <option value="Regional Championship (States)">Regional Championship (States)</option>
+          <option value="FIRST Championship (Worlds)">FIRST Championship (Worlds)</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="legend" id="focuslbl">Awards you're aiming for</span>
+        <div class="checks" id="focus" role="group" aria-labelledby="focuslbl"></div>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="run" disabled>Review portfolio</button>
+        <button class="btn" id="cancel" hidden>Stop</button>
+      </div>
+      <div class="progress" id="progress" hidden>
+        <div class="step" data-s="read"><span class="dot"></span><span>Read the PDF</span></div>
+        <div class="step" data-s="rules"><span class="dot"></span><span>Check portfolio rules (A201)</span></div>
+        <div class="step" data-s="pages"><span class="dot"></span><span id="pagesLabel">Review each page against the section checklist</span></div>
+        <div class="step" data-s="awards"><span class="dot"></span><span>Map sections &amp; grade every award criterion</span></div>
+        <div class="bar"><i id="barfill"></i></div>
+      </div>
+      <div id="msg"></div>
+      <div class="row" id="exportRow" hidden>
+        <button class="btn" id="copy">Copy report</button>
+        <button class="btn" id="dl" hidden>Download .md</button>
+      </div>
+      <p class="fine">Claude reads your pages and writes the feedback. Judges decide awards, so treat this as a second reader before your event. Your PDF is processed in this browser and sent only to Claude for the review.</p>
+    </div>
+  </aside>
+
+  <main>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-overview" aria-selected="true" data-v="overview">Overview</button>
+      <button class="tab" role="tab" id="t-rules" aria-selected="false" data-v="rules">Rule check<span class="count" id="c-rules"></span></button>
+      <button class="tab" role="tab" id="t-sections" aria-selected="false" data-v="sections">Sections<span class="count" id="c-sections"></span></button>
+      <button class="tab" role="tab" id="t-pages" aria-selected="false" data-v="pages">Pages<span class="count" id="c-pages"></span></button>
+      <button class="tab" role="tab" id="t-awards" aria-selected="false" data-v="awards">Awards<span class="count">8</span></button>
+    </div>
+    <section class="view on" id="v-overview"></section>
+    <section class="view" id="v-rules"></section>
+    <section class="view" id="v-sections"></section>
+    <section class="view" id="v-pages"></section>
+    <section class="view" id="v-awards"></section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   Award criteria: FIRST Tech Challenge Competition Manual TU06, Section 6.3
+   req: true  = REQUIRED  → must be present and clearly shown, or the team is not considered for the award.
+   req: false = ENCOURAGED → should be present and evident; separates strong contenders from eligible teams.
+   parts: lettered sub-requirements; rule "all" = every part needed, "any" = at least one part.
+   interviewOk: only these criteria may be satisfied in the interview instead of the portfolio.
+   ============================================================ */
+const AWARDS = [
+  { id: "inspire", name: "Inspire Award", cat: "All-around", portfolio: "Portfolio required", criteria: [
+    { n: 1, req: true, text: "Team must submit a portfolio.", auto: true },
+    { n: 2, req: true, text: "Team is a strong contender for at least one award in each category: Machine, Creativity & Innovation awards; Team Attributes awards; and the Think Award.", computed: true },
+    { n: 3, req: true, interviewOk: true, text: "Team is positive and inclusive, and each team member contributes to the success of the team." },
+    { n: 4, req: true, interviewOk: true, text: "Team is able to share their experiences and knowledge with the judges." } ] },
+  { id: "think", name: "Think Award", cat: "Documentation", portfolio: "Portfolio required", criteria: [
+    { n: 1, req: true, text: "Portfolio includes at least one engineering topic.", rule: "any", parts: [
+      { id: "A", text: "Evidence of use of the engineering process" },
+      { id: "B", text: "Lessons learned and applied to the design of the robot" },
+      { id: "C", text: "Comparing choices: different ideas and why one was chosen over the other" },
+      { id: "D", text: "Math used to make robot or programming design decisions" } ] },
+    { n: 2, req: false, text: "Information in the portfolio is easy to read and easy to find." } ] },
+  { id: "innovate", name: "Innovate Award", cat: "Machine, Creativity & Innovation", portfolio: "Portfolio optional", criteria: [
+    { n: 1, req: true, text: "Team shows examples of engineering work that explain how they developed their design." },
+    { n: 2, req: true, text: "The design of the robot or a mechanism is creative, unique, or both." },
+    { n: 3, req: true, text: "The creative design is stable and reliable and helps the team reach its game goals most of the time." },
+    { n: 4, req: false, text: "Team explains the risks in the design and how they reduced them." } ] },
+  { id: "control", name: "Control Award", cat: "Machine, Creativity & Innovation", portfolio: "Portfolio required", criteria: [
+    { n: 1, req: true, text: "Portfolio includes all of the following for the control system.", rule: "all", parts: [
+      { id: "A", text: "The hardware or software control components on the robot" },
+      { id: "B", text: "The challenge each component or system solves" },
+      { id: "C", text: "The function of each component or system" } ] },
+    { n: 2, req: true, text: "Team uses one or more hardware or software solutions that use external feedback (sensors) to control the robot and improve how it performs." },
+    { n: 3, req: false, text: "The control solution works consistently during most matches." },
+    { n: 4, req: false, text: "Team explains how reliable the solution is, by showing it works or explaining how it could be improved." },
+    { n: 5, req: false, text: "Team describes what they learned using the engineering process to develop their control solutions." } ] },
+  { id: "design", name: "Design Award", cat: "Machine, Creativity & Innovation", portfolio: "Portfolio optional", criteria: [
+    { n: 1, req: true, text: "Robot is elegant, efficient (simple to build and operate), and/or practical to maintain." },
+    { n: 2, req: true, text: "The design of the entire robot, or the detailed process used to create it, is considered — not just one component." },
+    { n: 3, req: false, text: "The robot stands out because of its appearance and how well it functions." },
+    { n: 4, req: false, text: "Team has thought through the reasons behind design choices, such as inspiration or function." },
+    { n: 5, req: false, text: "The design works consistently and aligns with the team's game plan or strategy." } ] },
+  { id: "connect", name: "Connect Award", cat: "Team Attributes", portfolio: "Portfolio optional", criteria: [
+    { n: 1, req: true, text: "Professional development plan for developing team member skills, including both:", rule: "all", parts: [
+      { id: "A", text: "The team's goals for learning" },
+      { id: "B", text: "The steps the team has taken or will take to reach those goals" } ] },
+    { n: 2, req: false, text: "Networking: building and maintaining meaningful relationships with STEM professionals." },
+    { n: 3, req: false, text: "Collaboration: actively working with the engineering community through mentoring, knowledge sharing, technical guidance, or joint activities." } ] },
+  { id: "reach", name: "Reach Award", cat: "Team Attributes", portfolio: "Portfolio optional", criteria: [
+    { n: 1, req: true, text: "Outreach planning, clearly explaining all of the following:", rule: "all", parts: [
+      { id: "A", text: "Outreach objectives" },
+      { id: "B", text: "The strategy behind outreach activities" },
+      { id: "C", text: "How the activities support growth of the FIRST community" } ] },
+    { n: 2, req: true, text: "Successful recruitment of new teams, coaches, mentors, or volunteers who have not previously participated in FIRST." },
+    { n: 3, req: false, text: "Serves as an ambassador for FIRST and increases public awareness through effective outreach and communication." },
+    { n: 4, req: false, text: "Creative, continuously improving outreach materials that introduce the team and FIRST to the public." } ] },
+  { id: "sustain", name: "Sustain Award", cat: "Team Attributes", portfolio: "Portfolio optional", criteria: [
+    { n: 1, req: true, text: "Plans for long-term success, including one or more of:", rule: "any", parts: [
+      { id: "A", text: "Financial sustainability" },
+      { id: "B", text: "Season planning" },
+      { id: "C", text: "Long-term team sustainability objectives" } ] },
+    { n: 2, req: true, text: "Project management: how the team measures, reviews, and tracks progress toward its sustainability plans and objectives." },
+    { n: 3, req: false, text: "Clearly defined team roles and an intentional process for preparing future student leaders." },
+    { n: 4, req: false, text: "Risk management: identifies organizational constraints, implements mitigation strategies, and adapts plans when challenges arise." } ] }
+];
+const AWARD_BY_ID = Object.fromEntries(AWARDS.map(a => [a.id, a]));
+const CATCLS = { "All-around": "c-inspire", "Documentation": "c-think", "Machine, Creativity & Innovation": "c-mci", "Team Attributes": "c-ta" };
+const MCI = ["innovate", "control", "design"], TA = ["connect", "reach", "sustain"];
+
+/* ============================================================
+   Portfolio sections and what judges expect to find in each.
+   Adapted from the LOAD Robotics (25609) STARTER PORT template and its LOAD Tips.
+   Teams may organise pages differently; coverage is judged by content, not layout.
+   ============================================================ */
+const SECTIONS = [
+  { id: "cover", name: "Cover page", awards: [], elements: [
+    "Team number (large, as text)", "Team name, logo and/or motto", "Photo, CAD or render of the robot and/or team", "Table of contents mapping sections to pages", "No template tips or placeholders left" ] },
+  { id: "team", name: "Team goals & skill development", awards: ["connect", "sustain", "inspire"], elements: [
+    "Team description: school or organisation affiliation and mission", "How goals are set and checked during the season (a named method or tracker)", "List of season goals with status, or an image of the goal tracker", "Meet the team: each member's role, interests and personal or skill goals", "Personal goals marked completed vs ongoing", "Students named by first name (and last initial) only" ] },
+  { id: "outreach_objectives", name: "Outreach objectives", awards: ["reach"], elements: [
+    "Specific outreach goals by category (make FIRST loud, inspire younger students, connect with FTC teams, online impact, start or support FIRST teams)", "Strategy: why these activities and audiences were chosen", "How outreach is documented (who attended, hours, people reached)", "Total people reached as a clear callout, counted accurately" ] },
+  { id: "community_outreach", name: "Community outreach & impact", awards: ["reach", "inspire"], elements: [
+    "A stated goal for each group of events", "Each event or program: short summary with key information in bold", "People reached for each event", "Volunteer hours", "Photos from the events", "Sustained, repeated programs shown separately from one-off events", "What the team learned or accomplished, and the impact on the people reached", "Brief list of smaller events" ] },
+  { id: "outreach_initiatives", name: "Outreach initiatives & media", awards: ["reach"], elements: [
+    "FIRST teams started, supported or reached, with numbers", "New members, coaches, mentors or volunteers recruited into FIRST", "Social media and website reach (views, followers, posts, videos)", "Press, blog or TV features and their reach", "Graphics that show numbers or structure at a glance" ] },
+  { id: "connect", name: "Connecting with the STEM community", awards: ["connect"], elements: [
+    "A goal for connecting with professionals", "Who the team met: company and role", "Goal of each visit or meeting", "What the team learned or did, and which skills it built", "New mentors gained and how they help", "Total number of industry professionals", "Collaboration with other FTC teams or engineers" ] },
+  { id: "sustainability", name: "Team sustainability", awards: ["sustain"], elements: [
+    "How the team finds funding and why it is sustainable (grants, sponsors, fundraising)", "Income and expense table for the 2026-27 season with totals", "Team recruitment and onboarding of new members", "Mentor recruitment and retention", "Risk mitigation (meeting space, long-term funding, documentation and knowledge transfer)", "Challenges faced this season and how plans adapted", "Leadership development and succession for when students graduate", "Season plan, and how progress is measured, reviewed and tracked" ] },
+  { id: "approach", name: "Engineering approach & strategy", awards: ["think", "design"], elements: [
+    "Engineering process steps (define, brainstorm, design, test, iterate) with the team's own actions in each", "How the team learned the game rules and constraints", "Game strategy and the design strategy that follows from it", "A problem considered, with costs and benefits weighed", "Calculations or analysis with stated conclusions" ] },
+  { id: "robot_overview", name: "Robot overview", awards: ["design", "innovate"], elements: [
+    "Full robot photo or CAD with annotated features", "How the overall design meets the game strategy", "Goals for the innovative feature or mechanism", "Details of how the key features work" ] },
+  { id: "design_process", name: "Feature design process", awards: ["think", "innovate", "design"], elements: [
+    "Brainstorm, design, build and iterate stages with specifics", "Numbered versions with the reason for each change", "Photos of prototypes (cardboard, LEGO, 3D print), sketches or whiteboards", "CAD designs and iterations", "Sources of inspiration (other teams, industry)", "Close-ups of important components" ] },
+  { id: "design_choices", name: "Design choices & project plan", awards: ["think", "design"], elements: [
+    "Two or more design options compared", "Benefits and costs of each option", "The decision and the reasoning behind it", "Project plan or Gantt chart with tasks and dates" ] },
+  { id: "innovative_mechanism", name: "Innovative mechanism deep dive", awards: ["innovate", "think"], elements: [
+    "Goal for the mechanism", "Brainstormed ideas with reasoning, and the decision", "Calculations (torque, speed, gear ratio, etc.) with conclusions", "Testing details and results", "Iterations made because of test results", "Step-by-step process with images", "Risks in the design and how they were reduced" ] },
+  { id: "component_timeline", name: "Innovation timeline & iterations", awards: ["innovate", "think"], elements: [
+    "Dated development steps", "Competition results and what changed because of them", "Number of iterations per part", "Major design revisions and why" ] },
+  { id: "control", name: "Robot control systems", awards: ["control"], elements: [
+    "A goal for the control system", "Challenge → component → function table", "Sensors and cameras, and what each one measures", "Software methods (e.g. odometry, PID, vision, path following) and what they control", "How external feedback improves performance", "Lessons learned → improvement made", "Testing or reliability data for the control solution" ] },
+  { id: "performance", name: "Performance, future & thanks", awards: ["control", "design", "sustain"], elements: [
+    "Goals and results from testing, shown with charts or data", "Achievements this season", "Future goals", "Thanks to coaches, mentors and sponsors (largest sponsors listed)", "FTC team collaborations", "AI-use credit line if AI tools were used" ] }
+];
+const SECTION_BY_ID = Object.fromEntries(SECTIONS.map(s => [s.id, s]));
+
+/* 1–5 evidence scale used for every criterion, every lettered part, and every award except Inspire */
+const SCORE = {
+  5: { label: "Extensive", desc: "Extensive, clear and visible evidence: specific, quantified (numbers, data, names, dates), explained with reasoning, easy to find, and covering every part." },
+  4: { label: "Strong", desc: "Clear, specific evidence that satisfies the criterion; small gaps in depth, data or visibility." },
+  3: { label: "Adequate", desc: "Present and identifiable, but thin: partly generic, little data or reasoning, or hard to find." },
+  2: { label: "Weak", desc: "Only mentioned or implied; vague claims without evidence." },
+  1: { label: "Missing", desc: "Not in the portfolio, or only template/placeholder text." }
+};
+const SCORE_CLS = { 5: "ok", 4: "ok", 3: "part", 2: "missing", 1: "missing" };
+const READINESS = {
+  strong: "Strong contender", competitive: "Competitive", developing: "Developing", weak: "Weak",
+  not_eligible: "Not eligible yet", pending: "Not reviewed",
+  inspire_strong: "Inspire contender", inspire_possible: "Possible contender", inspire_no: "Not in contention"
+};
+const READY_CLS = { strong: "ok", competitive: "ok", developing: "part", weak: "missing", not_eligible: "missing", pending: "pending", inspire_strong: "ok", inspire_possible: "part", inspire_no: "missing" };
+const SCORE_READY = { 5: "strong", 4: "competitive", 3: "developing", 2: "weak", 1: "weak" };
+const STATUS = { shown: "Clearly shown", partial: "Partly shown", missing: "Not found", interview: "Interview only", pending: "Not reviewed" };
+const STATUS_CLS = { shown: "ok", partial: "part", missing: "missing", interview: "interview", pending: "pending" };
+const SEC_STATUS = { covered: "Covered", thin: "Thin", missing: "Missing", pending: "Not reviewed" };
+const SEC_CLS = { covered: "ok", thin: "part", missing: "missing", pending: "pending" };
+const CHECK = { pass: "Pass", warn: "Check", fail: "Fix", info: "Note" };
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pill = (cls, label) => `<span class="pill s-${esc(cls)}">${esc(label)}</span>`;
+const nums = a => (Array.isArray(a) ? a : []).map(Number).filter(Number.isFinite);
+const prefs = pages => nums(pages).map(n => `<a class="pref" data-page="${n}" href="#pages">p.${n}</a>`).join(" ");
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+const state = { file: null, pages: [], checks: [], pageReviews: {}, report: null, sections: null, meta: {}, running: false, abort: null, awardFilter: "all" };
+
+/* ---------- focus award checkboxes ---------- */
+$("#focus").innerHTML = AWARDS.map(a => `<label><input type="checkbox" value="${a.id}" id="f-${a.id}"> ${esc(a.name.replace(" Award", ""))}</label>`).join("");
+
+/* ---------- tabs ---------- */
+function showTab(v) {
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.v === v)));
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+}
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => showTab(t.dataset.v)));
+document.addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go) { e.preventDefault(); showTab(go.dataset.go); return; }
+  const a = e.target.closest("a.pref");
+  if (a) {
+    e.preventDefault();
+    showTab("pages");
+    const el = document.getElementById("page-" + a.dataset.page);
+    if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600); }
+    return;
+  }
+  const tile = e.target.closest(".tile[data-award]");
+  if (tile) {
+    showTab("awards");
+    const el = document.getElementById("award-" + tile.dataset.award);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+/* ---------- file input ---------- */
+const drop = $("#drop");
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) setFile(f); });
+$("#file").addEventListener("change", e => { const f = e.target.files[0]; if (f) setFile(f); });
+function setFile(f) {
+  if (!/pdf$/i.test(f.type) && !/\.pdf$/i.test(f.name)) { message("That file isn't a PDF. Export your portfolio as a PDF and try again.", true); return; }
+  state.file = f;
+  $("#fname").textContent = `${f.name} · ${(f.size / 1048576).toFixed(1)} MB`;
+  $("#run").disabled = state.running;
+  message("");
+}
+function message(t, err) { $("#msg").innerHTML = t ? `<div class="notice${err ? " err" : ""}">${t}</div>` : ""; }
+
+/* ---------- progress ---------- */
+function stepState(s, cls) { const el = document.querySelector(`.step[data-s="${s}"]`); el.classList.remove("active", "done", "fail"); if (cls) el.classList.add(cls); }
+function bar(p) { $("#barfill").style.width = Math.round(p * 100) + "%"; }
+
+/* ---------- PDF reading ---------- */
+async function readPdf(file, onPage) {
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buf, isEvalSupported: false }).promise;
+  const pages = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const p = await pdf.getPage(i);
+    const vp1 = p.getViewport({ scale: 1 });
+    const tc = await p.getTextContent();
+    let text = "", chars = 0, small = 0, lastY = null;
+    for (const it of tc.items) {
+      if (!("str" in it)) continue;
+      const t = it.transform, size = Math.hypot(t[2], t[3]);
+      const n = it.str.replace(/\s/g, "").length;
+      chars += n; if (size > 0 && size < 9.5) small += n;
+      if (lastY !== null && Math.abs(t[5] - lastY) > 2) text += "\n"; else if (text && !/\s$/.test(text)) text += " ";
+      text += it.str; lastY = t[5];
+    }
+    const scale = Math.min(2.2, 1100 / Math.max(vp1.width, vp1.height) * (vp1.height > vp1.width ? 1.25 : 1));
+    const vp = p.getViewport({ scale });
+    const c = document.createElement("canvas");
+    c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+    const ctx = c.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+    await p.render({ canvasContext: ctx, viewport: vp }).promise;
+    const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.72));
+    const th = document.createElement("canvas"); th.width = 200; th.height = Math.round(c.height * 200 / c.width);
+    th.getContext("2d").drawImage(c, 0, 0, th.width, th.height);
+    pages.push({ n: i, w: vp1.width, h: vp1.height, text: text.replace(/[ \t]+/g, " ").trim(), chars, small, blob, thumb: th.toDataURL("image/jpeg", 0.7) });
+    c.width = c.height = 0;
+    onPage(i, pdf.numPages);
+  }
+  return pages;
+}
+
+/* ---------- A201 rule checks (no AI) ---------- */
+function ruleChecks(pages, file, team) {
+  const out = [];
+  const total = pages.length;
+  out.push(total <= 16
+    ? { rule: "A201.B", title: "Page count", status: "pass", detail: `${total} page${total === 1 ? "" : "s"}: 1 cover + ${Math.max(0, total - 1)} content pages (limit 15).` }
+    : { rule: "A201.B", title: "Page count", status: "fail", detail: `${total} pages. Judges read the cover plus 15 pages, so pages 17–${total} will not be reviewed. Cut or merge content.`, pages: pages.slice(16).map(p => p.n) });
+
+  const near = (a, b) => Math.abs(a - b) < 4;
+  const okSize = p => (near(p.w, 612) && near(p.h, 792)) || (near(p.w, 792) && near(p.h, 612)) || (near(p.w, 595.3) && near(p.h, 841.9)) || (near(p.w, 841.9) && near(p.h, 595.3));
+  const badSize = pages.filter(p => !okSize(p));
+  out.push(badSize.length
+    ? { rule: "A201.C", title: "Page size", status: "fail", detail: `${badSize.length} page(s) aren't US Letter or A4 (first one is ${(badSize[0].w / 72).toFixed(2)}″ × ${(badSize[0].h / 72).toFixed(2)}″). Slides exported at 16:9 are a common cause.`, pages: badSize.map(p => p.n) }
+    : { rule: "A201.C", title: "Page size", status: "pass", detail: "Every page is US Letter or A4." });
+
+  const mb = file.size / 1048576;
+  out.push({ rule: "A201.D", title: "File size", status: mb < 15 ? "pass" : "fail", detail: mb < 15 ? `${mb.toFixed(1)} MB, under the 15 MB limit.` : `${mb.toFixed(1)} MB. Digital submissions must be under 15 MB; compress the images.` });
+
+  const cover = pages[0];
+  const coverText = cover ? cover.text : "";
+  if (cover && cover.chars < 5) out.push({ rule: "A201.A", title: "Cover page with team number", status: "warn", detail: "The cover is an image, so the team number couldn't be read automatically. Confirm it's large and clear: judges can't evaluate a portfolio they can't match to a team.", pages: [1] });
+  else if (team && coverText.replace(/\D/g, " ").split(/\s+/).includes(team)) out.push({ rule: "A201.A", title: "Cover page with team number", status: "pass", detail: `Team number ${team} appears on the cover. Cover content isn't used for any award.`, pages: [1] });
+  else if (/\b\d{3,5}\b/.test(coverText)) out.push({ rule: "A201.A", title: "Cover page with team number", status: team ? "warn" : "pass", detail: team ? `Couldn't find ${team} on the cover. Check the number is there as text.` : "A team number appears on the cover. Cover content isn't used for any award.", pages: [1] });
+  else out.push({ rule: "A201.A", title: "Cover page with team number", status: "fail", detail: "No team number found on page 1. Without it judges may not be able to identify your portfolio.", pages: [1] });
+
+  const smallPages = pages.filter(p => p.chars > 80 && p.small / p.chars > 0.12);
+  out.push(smallPages.length
+    ? { rule: "A201 (readability)", title: "Small text", status: "warn", detail: `Pages where more than 12% of the text is under 10 pt. Judges may not be able to read it in print.`, pages: smallPages.map(p => p.n) }
+    : { rule: "A201 (readability)", title: "Small text", status: "pass", detail: "No pages with a large share of text under 10 pt." });
+
+  const imgPages = pages.filter(p => p.chars < 30);
+  if (imgPages.length) out.push({ rule: "A201 (readability)", title: "Text inside images", status: "info", detail: "These pages have little or no selectable text, so text size couldn't be measured. Claude still reads the page image; check contrast and size by eye.", pages: imgPages.map(p => p.n) });
+
+  const linkPages = pages.filter(p => /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|org|net|io|dev)\b|\bQR\b|youtube|scan (the|this|me))/i.test(p.text));
+  out.push(linkPages.length
+    ? { rule: "A201 (links)", title: "Links, QR codes, videos", status: "warn", detail: "Judges won't click links, scan QR codes or watch videos. Anything behind a link needs to be summarised on the page.", pages: linkPages.map(p => p.n) }
+    : { rule: "A201 (links)", title: "Links, QR codes, videos", status: "pass", detail: "No links or QR references found in the text." });
+
+  const oldRx = /\b(20(0\d|1\d|2[0-5]))\b|INTO THE DEEP|CENTERSTAGE|CENTER ?STAGE|POWERPLAY|FREIGHT FRENZY|ULTIMATE GOAL|SKYSTONE|\bDECODE\b|last (season|year)/i;
+  const oldPages = pages.slice(1, 16).filter(p => oldRx.test(p.text));
+  out.push(oldPages.length
+    ? { rule: "A201.E", title: "Current-season focus", status: "warn", detail: "These pages mention earlier years or past games. Only work since January 1, 2026 counts; past seasons are fine only to show growth (for example in a team plan).", pages: oldPages.map(p => p.n) }
+    : { rule: "A201.E", title: "Current-season focus", status: "pass", detail: "No references to earlier seasons found in the text." });
+
+  const piiPages = pages.filter(p => /[\w.+-]+@[\w-]+\.[\w.]+|\(?\b\d{3}\)?[-. ]\d{3}[-. ]\d{4}\b/.test(p.text));
+  out.push(piiPages.length
+    ? { rule: "A201 (privacy)", title: "Personal information", status: "warn", detail: "Email addresses or phone numbers found. Keep personal information to a minimum; students should appear by first name and last initial only.", pages: piiPages.map(p => p.n) }
+    : { rule: "A201 (privacy)", title: "Personal information", status: "info", detail: "No emails or phone numbers found. Also check that students appear by first name and last initial only." });
+
+  const aiPages = pages.filter(p => /chatgpt|\bclaude\b|gemini|copilot|\bA\.?I\.?\b(-| )?(generated|assisted|tools?)|portfolio created by/i.test(p.text));
+  out.push({ rule: "A201 (AI credit)", title: "AI credit line", status: "info", detail: aiPages.length ? "An AI or credit mention was found. Make sure it's a clear footnote or endnote credit." : "If you used AI tools to write or design the portfolio, add a credit, e.g. “Portfolio created by Team 12345 and Claude”.", pages: aiPages.map(p => p.n) });
+
+  const tplRx = /LOAD\s*Tip|Remove LOAD Tips|ADD YOUR OWN DETAILS|Description\s*\.{4,}|\.{12,}|Add a (short )?(description|summary)|Describe (your )?goals?\b|List goal here|Company Name|Job Title: Name|Name of person you met|Personal Goal|Team Role\b|Event Name|list what you learned|Details\s*\.{3,}|\b55555\b|\bGoal [123]\b|\$\$|Competition Name and Outcome|Describe robot features|# ?(views|followers|posts|subscribers)\b|\[Feature\]|\[a Robot Process\]/i;
+  const tplPages = pages.slice(0, 16).filter(p => tplRx.test(p.text));
+  out.push(tplPages.length
+    ? { rule: "Finish check", title: "Leftover template text", status: "fail", detail: "Template tips or placeholder text (for example LOAD Tips, “Description.....”, “$$”, “Name”, “Goal 1”, “55555 Team Name”) are still on these pages. Judges read this as an unfinished portfolio; replace or delete it.", pages: tplPages.map(p => p.n) }
+    : { rule: "Finish check", title: "Leftover template text", status: "pass", detail: "No template tips or placeholder text found in the text layer. Also check for stock placeholder images." });
+  return out;
+}
+
+/* ---------- Claude ---------- */
+let samplePromise = null;
+function getSample() {
+  if (!samplePromise) samplePromise = (window.claude && window.claude.use) ? window.claude.use("sample").catch(() => null) : Promise.resolve(null);
+  return samplePromise;
+}
+function parseJSON(text) {
+  if (!text) throw new Error("Empty answer");
+  const s = text.indexOf("{"), e = text.lastIndexOf("}");
+  if (s < 0 || e < s) throw new Error("No JSON in answer");
+  return JSON.parse(text.slice(s, e + 1));
+}
+async function askJSON(sample, prompt, opts) {
+  const run = async () => { const r = await sample(prompt, opts); return parseJSON(r && r.text); };
+  try { return await run(); }
+  catch (err) {
+    if (err && err.code === "rate_limited") { await new Promise(r => setTimeout(r, 20000)); return run(); }
+    if (err instanceof SyntaxError || /JSON|Empty/.test(err && err.message)) return run();
+    throw err;
+  }
+}
+
+const CRITERIA_TEXT = AWARDS.map(a => `${a.id} — ${a.name} (${a.cat}; ${a.portfolio})\n` + a.criteria.map(c =>
+  `  ${c.n}. [${c.req ? "REQUIRED" : "ENCOURAGED"}] ${c.text}` + (c.parts ? "\n" + c.parts.map(p => `      ${p.id}. ${p.text}`).join("\n") + `\n      (${c.rule === "all" ? "ALL parts must be shown" : "at least ONE part must be shown"})` : "")
+).join("\n")).join("\n");
+
+const SECTIONS_TEXT = SECTIONS.map(s => `${s.id} — ${s.name}${s.awards.length ? " (feeds: " + s.awards.join(", ") + ")" : ""}\n` + s.elements.map(e => `   • ${e}`).join("\n")).join("\n");
+
+const JUDGING_RULES = `Judging rules (FIRST Tech Challenge Competition Manual TU06, Section 6):
+- Judges consider only the published award criteria. REQUIRED criteria are a gate: if any required criterion is not clearly present, the team is not considered for that award at all. ENCOURAGED criteria are expected to be present and evident; strong contenders show them clearly.
+- Page 1 is the cover. Judges use it only to identify the team; its content counts for no award. Judges read at most 15 pages after the cover.
+- Only progress, challenges and accomplishments since January 1, 2026 count. Earlier seasons may appear only to show growth.
+- Judges do not click links, scan QR codes or watch videos, and cannot take extra papers to deliberations.
+- Text under 10 pt or low-contrast text on images may not be read.
+- Robot match scores and rankings are not considered unless a criterion names performance (e.g. "works in most matches").
+- Sustained, ongoing outreach counts for more than one-off events; judges look for the impact on the people reached.`;
+
+const JUDGE_EXPECTATIONS = `What experienced judges look for when they read a portfolio (use this as your bar for depth):
+- Evidence, not claims. "We did lots of outreach" is a claim; "Taught LEGO coding at 6 weekly library sessions, 48 kids, 36 volunteer hours" is evidence. Numbers (people reached, hours, dollars, iterations, test results, dates), named partners (company + role), and named mechanisms count.
+- The WHY behind decisions: options compared with benefits and costs, the choice made, and the reasoning. Calculations must end in a stated conclusion that drove a design choice.
+- A visible engineering process: define → brainstorm → design → test → iterate, with numbered versions and what changed because of testing.
+- Control explained as challenge → component → function, naming each sensor/camera/software method and how its feedback improves the robot, backed by test or reliability data.
+- Team Attributes shown as plans with goals, steps and tracking (who, what, by when, how measured), not just a list of activities.
+- Sustained programs over one-offs, accurate counts, and the impact on the people reached.
+- Readable in a 30-second skim: clear headings, key facts in bold, callouts with totals, graphics for numbers, and a balance between text-heavy and visual pages. A table of contents helps judges find sections.
+- A finished document: no leftover template tips, placeholders ("Description....", "$$", "Name", "Goal 1", "55555 Team Name"), or stock placeholder images.`;
+
+const GRADING = `Score every criterion of every award except Inspire on this 1–5 evidence scale. Be strict: score what a judging panel would conclude from the portfolio alone.
+  5 = Extensive: extensive, clear and visible evidence — specific and quantified (numbers, data, names, dates), with the reasoning explained, easy to find, and covering EVERY part of the criterion. Reserve 5 for evidence that would stand out at a Regional Championship.
+  4 = Strong: clear, specific evidence that satisfies the criterion; small gaps in depth, data or visibility.
+  3 = Adequate: present and identifiable but thin — partly generic, little data or reasoning, or hard to find.
+  2 = Weak: only mentioned or implied; vague claims without evidence; a heading with little substance.
+  1 = Missing: not in the portfolio, or only template/placeholder text.
+- For criteria with lettered parts, score EACH part on the same scale. (The criterion score is computed from the parts: the lowest part when all parts are required, the highest part when only one is required.)
+- A claim is not evidence. "We did a lot of outreach" is a 2; a table of events with people reached, hours and photos can be a 4 or 5.
+- Inspire: give criteria 1 and 2 a short evidence note only (they are computed). For Inspire 3 and 4 use status "shown", "partial", or "interview" (interview = no portfolio support; must be shown in the interview).`;
+
+function pageBatchPrompt(batch, ctx, withImages) {
+  const texts = batch.map(p => `--- Page ${p.n} extracted text${p.chars < 30 ? " (little or no text layer; read the image)" : ""} ---\n${(p.text || "(none)").slice(0, 3500)}`).join("\n\n");
+  return `You are an experienced FIRST Tech Challenge judge reviewing a student team's engineering portfolio, page by page, to give private, constructive feedback before their next event (${ctx.level}). Season: 2026-27 BIOBUZZ.
+
+${JUDGING_RULES}
+
+${JUDGE_EXPECTATIONS}
+
+Award criteria (award id — name; criteria numbered):
+${CRITERIA_TEXT}
+
+Portfolio sections and the elements judges expect in each (section id — name):
+${SECTIONS_TEXT}
+
+You are reviewing pages ${batch[0].n}–${batch[batch.length - 1].n} of a ${ctx.total}-page portfolio${ctx.team ? ` from team ${ctx.team}` : ""}.${withImages ? ` The attached images are these pages in order: image 1 is page ${batch[0].n}${batch.length > 1 ? `, image 2 is page ${batch[1].n}, and so on` : ""}. Use the images for layout, diagrams, charts, photos, data tables and any text the extraction missed.` : " No page images are available; work from the extracted text and say where you cannot judge layout or images."}
+
+${texts}
+
+Return ONLY a JSON object, no prose, in exactly this shape:
+{"pages":[{"page":<number>,"title":"<the page's own heading or a 2-5 word description>","sectionIds":["<1-3 section ids from the list above that this page covers>"],"summary":"<1-2 sentences on what the page shows>","glance":"<what a judge takes away from a 30-second skim of this page>","checklist":[{"section":"<section id>","element":"<an expected element for that section, copied from the list>","status":"present|thin|missing","note":"<what is there, or what is missing>"}],"strengths":["<0-3 specific strengths>"],"improvements":["<2-5 concrete edits ranked by impact: what to add, cut, or change, and why a judge would care>"],"leftovers":["<any template tips, placeholder text or stock placeholder images still on the page>"],"readability":{"rating":"good|fair|poor","note":"<font size, contrast, density, bolding of key facts, balance of text and visuals>"},"evidence":[{"award":"<award id>","criterion":<number>,"part":"<letter or empty>","strength":"shown|partial","note":"<what on this page supports it>"}]}]}
+
+How to write the feedback:
+- checklist: for each section the page covers, go through EVERY expected element of that section and mark it present (specific and convincing), thin (there but vague, unquantified or hard to find), or missing.
+- Be specific to what is actually on the page: name the mechanism, chart, program, number or photo. Never invent content you cannot see or read.
+- Improvements must be things students can do this week, e.g. "Add a Challenge → Component → Function row for the Limelight: what problem it solves (aiming at range) and what it does (AprilTag distance → turret angle)", not "add more detail".
+- Reward quantified evidence and explanations of WHY. Call out claims that lack evidence.
+- For the cover page: check identification, first impression and table of contents only; list no award evidence.
+- List award evidence only where the page genuinely supports a criterion; mark strength partial when it is thin.`;
+}
+
+function ledgerText(ctx) {
+  return ctx.pages.map(p => {
+    const r = state.pageReviews[p.n];
+    if (!r) return `Page ${p.n}: (not reviewed)`;
+    return `Page ${p.n} "${r.title}" [${(r.sectionIds || []).join(", ")}]: ${r.summary}
+  Glance: ${r.glance || ""}
+  Checklist: ${(r.checklist || []).map(c => `${c.section}/${c.element}: ${c.status}${c.note ? " (" + c.note + ")" : ""}`).join(" | ") || "none"}
+  Evidence: ${(r.evidence || []).map(e => `${e.award}#${e.criterion}${e.part || ""} ${e.strength || ""}: ${e.note}`).join(" | ") || "none"}
+  Leftovers: ${(r.leftovers || []).join("; ") || "none"}
+  Readability: ${r.readability ? r.readability.rating + " — " + r.readability.note : "n/a"}`;
+  }).join("\n");
+}
+function pageTexts(ctx, total) {
+  const budget = Math.max(700, Math.floor(total / Math.max(1, ctx.pages.length)));
+  return ctx.pages.filter(p => p.n > 1).map(p => `--- Page ${p.n} ---\n${(p.text || "(image only — see notes above)").slice(0, budget)}`).join("\n\n");
+}
+function contextHeader(ctx) {
+  return `Next event: ${ctx.level}.${ctx.team ? ` Team ${ctx.team}.` : ""} Awards the team is aiming for: ${ctx.focus.length ? ctx.focus.map(id => AWARD_BY_ID[id].name).join(", ") : "not specified (give balanced feedback)"}.`;
+}
+
+function sectionsPrompt(ctx) {
+  return `You are the lead judge on a FIRST Tech Challenge judging panel, giving a student team private pre-event feedback on how completely their engineering portfolio covers what judges look for. Season: 2026-27 BIOBUZZ. ${contextHeader(ctx)}
+
+${JUDGING_RULES}
+
+${JUDGE_EXPECTATIONS}
+
+Portfolio sections and the elements judges expect in each:
+${SECTIONS_TEXT}
+
+Notes from the page-by-page review:
+${ledgerText(ctx)}
+
+Extracted page text:
+${pageTexts(ctx, 22000)}
+
+Teams may organise pages differently from this list; judge whether the CONTENT is present anywhere in the portfolio. Return ONLY a JSON object, no prose:
+{"sections":[{"id":"<section id>","status":"covered|thin|missing","pages":[<page numbers>],"present":["<expected elements that are clearly present>"],"missing":["<expected elements that are missing or thin, each with a few words on what is lacking>"],"feedback":"<2-3 sentences: how this section reads to a judge and the single most valuable improvement>","priority":"high|medium|low"}]}
+
+Rules:
+- Include all ${SECTIONS.length} sections in this order: ${SECTIONS.map(s => s.id).join(", ")}.
+- covered = most elements present with specific evidence; thin = some elements present or present but vague; missing = little or nothing.
+- priority reflects impact on the awards the section feeds (and the team's target awards): a missing section that blocks a REQUIRED criterion is high.
+- Never invent content. Cite pages.`;
+}
+
+function awardPrompt(ctx) {
+  const checks = state.checks.map(c => `${c.rule} ${c.title}: ${c.status.toUpperCase()} — ${c.detail}`).join("\n");
+  return `You are the lead judge on a FIRST Tech Challenge judging panel giving a student team private, constructive pre-event feedback on their engineering portfolio. Season: 2026-27 BIOBUZZ. ${contextHeader(ctx)}
+
+${JUDGING_RULES}
+
+${JUDGE_EXPECTATIONS}
+
+${GRADING}
+
+Award criteria:
+${CRITERIA_TEXT}
+
+Automatic rule checks on the PDF:
+${checks}
+
+Notes from the page-by-page review:
+${ledgerText(ctx)}
+
+Extracted page text (may be partial; image-only pages appear as notes above):
+${pageTexts(ctx, 30000)}
+
+Grade EVERY criterion of EVERY award. Return ONLY a JSON object, no prose:
+{"overall":{"summary":"<3-4 sentences: what this portfolio does well, the biggest gap, and which awards it is eligible for and best positioned for>","topFixes":[{"title":"<short imperative>","why":"<which award criteria it unlocks — say if it removes a REQUIRED blocker>","how":"<concrete steps naming pages and what to add>","pages":[<page numbers>]}]},
+ "awards":[{"id":"<award id>","headline":"<one sentence verdict a judge would give>","criteria":[{"n":<number>,"score":<1-5, omit for Inspire>,"status":"<Inspire 3-4 only: shown|partial|interview>","parts":[{"id":"<letter>","score":<1-5>,"evidence":"<what is shown for this part>","pages":[<numbers>]}],"evidence":"<what the portfolio shows for this criterion, quoting specifics (numbers, names, mechanisms), or exactly what is absent>","pages":[<page numbers>],"judgeLooksFor":"<one sentence: what evidence would earn a 5>","suggestion":"<the specific change that would raise the score by at least one point; empty only if already 5>"}],"interviewQuestions":["<3 questions judges are likely to ask about this award, based on this portfolio>"]}]}
+
+Rules:
+- Include all 8 awards in this order: ${AWARDS.map(a => a.id).join(", ")}, with every criterion number. Include "parts" only for criteria that list lettered parts, and grade every part.
+- Do not decide award scores, readiness or eligibility; they are computed from your criterion scores.
+- topFixes: the 6 highest-impact changes, ordered by impact. First, fixes that lift a REQUIRED criterion from 1–2 to at least 3 (that removes an eligibility blocker), especially for the team's target awards; then fixes that lift low-scoring criteria toward 4–5; then readability. Prefer fixes that raise several awards at once. Say which scores each fix should raise.
+- Cite page numbers. Never invent evidence. Write to students: direct, encouraging, specific.`;
+}
+
+/* ---------- scoring: criterion scores → award score, eligibility, Inspire contention ---------- */
+const clampScore = v => { const n = Math.round(Number(v)); return n >= 1 && n <= 5 ? n : null; };
+function combineParts(rule, parts) {
+  const sc = parts.map(p => p.score).filter(Boolean);
+  if (!sc.length) return null;
+  return rule === "any" ? Math.max(...sc) : Math.min(...sc);
+}
+const ORDER = ["not_eligible", "weak", "developing", "competitive", "strong"];
+/* Award score (1–5) = average of all its criterion scores, rounded,
+   but never higher than its weakest REQUIRED criterion and never more than 1 above its weakest criterion.
+   Eligibility gate: any REQUIRED criterion scoring 1–2 → Not eligible yet. */
+function gradeAward(def, crit) {
+  const sc = n => (crit.find(c => c.n === n) || {}).score || null;
+  const all = def.criteria.map(c => ({ c, s: sc(c.n) }));
+  if (all.every(x => !x.s)) return { readiness: "pending", score: null, blockers: [], weak: [] };
+  const vals = all.map(x => x.s || 1);
+  const req = all.filter(x => x.c.req).map(x => x.s || 1);
+  const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+  const score = Math.max(1, Math.min(Math.round(avg), Math.min(...req), Math.min(...vals) + 1));
+  const blockers = all.filter(x => x.c.req && (x.s || 1) <= 2).map(x => x.c.n);
+  const weak = all.filter(x => x.c.req && x.s === 3).map(x => x.c.n);
+  return {
+    score, avg: Math.round(avg * 10) / 10, blockers, weak,
+    readiness: blockers.length ? "not_eligible" : SCORE_READY[score],
+    reqShown: all.filter(x => x.c.req && x.s >= 4).length, reqTotal: req.length,
+    encShown: all.filter(x => !x.c.req && x.s >= 4).length, encTotal: all.length - req.length
+  };
+}
+
+function normaliseReport(r) {
+  const byId = Object.fromEntries(((r && r.awards) || []).map(a => [a.id, a]));
+  const awards = AWARDS.map(def => {
+    const got = byId[def.id] || {};
+    const cm = Object.fromEntries((got.criteria || []).map(c => [+c.n, c]));
+    const criteria = def.criteria.map(dc => {
+      const g = cm[dc.n] || {};
+      const c = { n: dc.n, evidence: g.evidence || "", pages: nums(g.pages), suggestion: g.suggestion || "", judgeLooksFor: g.judgeLooksFor || "", parts: [], score: null, status: "pending" };
+      if (def.id === "inspire") {
+        c.status = dc.auto ? (Object.keys(cm).length ? "shown" : "pending") : (["shown", "partial", "interview"].includes(g.status) ? g.status : (Object.keys(cm).length ? "interview" : "pending"));
+        return c;
+      }
+      c.score = clampScore(g.score);
+      if (dc.parts) {
+        const pm = Object.fromEntries((g.parts || []).map(p => [String(p.id).toUpperCase(), p]));
+        c.parts = dc.parts.map(p => { const gp = pm[p.id] || {}; return { id: p.id, score: clampScore(gp.score) || (Object.keys(cm).length ? 1 : null), evidence: gp.evidence || "", pages: nums(gp.pages) }; });
+        const combined = combineParts(dc.rule, c.parts);
+        if (combined) c.score = combined;
+      }
+      if (!c.score && Object.keys(cm).length) c.score = 1;
+      return c;
+    });
+    return { id: def.id, headline: got.headline || "", interviewQuestions: got.interviewQuestions || [], criteria };
+  });
+  const grades = {};
+  awards.filter(a => a.id !== "inspire").forEach(a => { grades[a.id] = gradeAward(AWARD_BY_ID[a.id], a.criteria); });
+  /* Inspire: needs a 5 (or possibly a 4) in every award category — Think, the best Machine, Creativity & Innovation award, and the best Team Attributes award — and must be eligible in each. */
+  const val = id => (grades[id] && grades[id].readiness !== "not_eligible" && grades[id].score) || 0;
+  const best = ids => ids.reduce((b, id) => val(id) > val(b) ? id : b, ids[0]);
+  const bm = best(MCI), bt = best(TA);
+  const cats = [{ name: "Think", id: "think", score: val("think") }, { name: "Machine, Creativity & Innovation", id: bm, score: val(bm) }, { name: "Team Attributes", id: bt, score: val(bt) }];
+  const insp = awards.find(a => a.id === "inspire");
+  const c2 = insp.criteria.find(c => c.n === 2);
+  if (grades.think && grades.think.readiness !== "pending") {
+    const lo = Math.min(...cats.map(c => c.score));
+    c2.status = lo >= 5 ? "shown" : lo >= 4 ? "partial" : "missing";
+    c2.evidence = cats.map(c => `${c.name}: ${c.score ? c.score + "/5" : "not eligible"} (${AWARD_BY_ID[c.id].name})`).join(" · ");
+    c2.suggestion = lo >= 5 ? "" : `Raise ${cats.filter(c => c.score < 5).map(c => c.name === "Think" ? "the Think Award" : `your best ${c.name} award (${AWARD_BY_ID[c.id].name})`).join(", ")} to 5 to be a clear Inspire contender.`;
+    grades.inspire = { readiness: lo >= 5 ? "inspire_strong" : lo >= 4 ? "inspire_possible" : "inspire_no", score: null, cats, blockers: [], weak: [] };
+  } else grades.inspire = { readiness: "pending", score: null, cats, blockers: [], weak: [] };
+  awards.forEach(a => Object.assign(a, grades[a.id]));
+  return { overall: (r && r.overall) || { summary: "", topFixes: [] }, awards };
+}
+function normaliseSections(s) {
+  const byId = Object.fromEntries(((s && s.sections) || []).map(x => [x.id, x]));
+  return SECTIONS.map(def => {
+    const g = byId[def.id] || {};
+    return { id: def.id, status: SEC_STATUS[g.status] ? g.status : "pending", pages: nums(g.pages), present: g.present || [], missing: g.missing || [], feedback: g.feedback || "", priority: ["high", "medium", "low"].includes(g.priority) ? g.priority : "medium" };
+  });
+}
+
+/* ---------- run ---------- */
+$("#run").addEventListener("click", run);
+$("#cancel").addEventListener("click", () => { if (state.abort) state.abort.abort(); });
+
+async function run() {
+  if (!state.file || state.running) return;
+  state.running = true; state.abort = new AbortController();
+  $("#run").disabled = true; $("#cancel").hidden = false; $("#progress").hidden = false; $("#exportRow").hidden = true;
+  message("");
+  ["read", "rules", "pages", "awards"].forEach(s => stepState(s, null)); bar(0);
+  state.pageReviews = {}; state.report = null; state.sections = null;
+  const team = $("#team").value.trim().replace(/^#/, "");
+  const focus = [...document.querySelectorAll("#focus input:checked")].map(i => i.value);
+  const level = $("#level").value;
+  state.meta = { team, focus, level, fileName: state.file.name, date: new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) };
+
+  try {
+    stepState("read", "active");
+    state.pages = await readPdf(state.file, (i, n) => bar(0.12 * i / n));
+    stepState("read", "done");
+
+    stepState("rules", "active");
+    state.checks = ruleChecks(state.pages, state.file, team);
+    stepState("rules", "done");
+    renderAll();
+
+    const sample = await getSample();
+    if (!sample) {
+      stepState("pages", "fail");
+      message("The rule check is done, but this view can't reach Claude for the written feedback. Open this page on claude.ai while signed in, then run the review again.", true);
+      return;
+    }
+    let maxImages = 0;
+    try { const lim = await sample.limits(); maxImages = typeof lim.images === "number" ? lim.images : (lim.images ? 4 : 0); } catch { maxImages = 0; }
+    const per = maxImages ? Math.max(1, Math.min(3, maxImages)) : 4;
+    const reviewPages = state.pages.slice(0, 16);
+    const batches = [];
+    for (let i = 0; i < reviewPages.length; i += per) batches.push(reviewPages.slice(i, i + per));
+    const ctx = { team, focus, level, total: state.pages.length, pages: reviewPages };
+
+    stepState("pages", "active");
+    let done = 0;
+    const label = $("#pagesLabel");
+    label.textContent = `Review each page against the section checklist (0 of ${reviewPages.length})`;
+    const failed = [];
+    const work = async b => {
+      const withImages = maxImages > 0;
+      const opts = { signal: state.abort.signal, modelTier: "complex" };
+      if (withImages) opts.images = b.map(p => p.blob);
+      try {
+        const res = await askJSON(sample, pageBatchPrompt(b, ctx, withImages), opts);
+        for (const r of res.pages || []) if (Number.isFinite(+r.page)) state.pageReviews[+r.page] = r;
+      } catch (err) {
+        if (state.abort.signal.aborted || (err && err.code === "not_granted")) throw err;
+        failed.push(...b.map(p => p.n));
+      }
+      done += b.length;
+      label.textContent = `Review each page against the section checklist (${Math.min(done, reviewPages.length)} of ${reviewPages.length})`;
+      bar(0.12 + 0.58 * done / reviewPages.length);
+      renderPages(); renderOverview();
+    };
+    const queue = batches.slice();
+    await Promise.all([0, 1].map(async () => { while (queue.length) await work(queue.shift()); }));
+    stepState("pages", "done");
+
+    stepState("awards", "active");
+    bar(0.75);
+    const [secRes, awardRes] = await Promise.allSettled([
+      askJSON(sample, sectionsPrompt(ctx), { signal: state.abort.signal, modelTier: "complex" }),
+      askJSON(sample, awardPrompt(ctx), { signal: state.abort.signal, modelTier: "complex" })
+    ]);
+    if (state.abort.signal.aborted) throw new DOMException("aborted", "AbortError");
+    if (awardRes.status === "rejected") throw awardRes.reason;
+    state.report = normaliseReport(awardRes.value);
+    if (secRes.status === "fulfilled") state.sections = normaliseSections(secRes.value);
+    stepState("awards", "done"); bar(1);
+    renderAll();
+    store.set("pr:last", { meta: state.meta, checks: state.checks, pageReviews: state.pageReviews, report: state.report, sections: state.sections, pages: state.pages.map(p => ({ n: p.n, chars: p.chars })) });
+    $("#exportRow").hidden = false;
+    const notes = [];
+    if (failed.length) notes.push(`Pages ${failed.join(", ")} couldn't be reviewed individually, but their text was still used for scoring.`);
+    if (!state.sections) notes.push("The section-coverage check didn't finish; run the review again to get it.");
+    message(notes.length ? "Done. " + notes.join(" ") : "Done. Start with the Overview: awards marked Not eligible yet are missing a required criterion.");
+    showTab("overview");
+  } catch (err) {
+    const active = document.querySelector(".step.active"); if (active) active.classList.replace("active", "fail");
+    if (state.abort && state.abort.signal.aborted) message("Review stopped. Anything finished so far is still shown.");
+    else if (err && err.code === "not_granted") message("Claude access wasn't granted for this page, so only the rule check ran. Allow access when prompted and run the review again.", true);
+    else if (err && err.code === "rate_limited") message("Claude is busy right now. Wait a minute, then run the review again.", true);
+    else message(`Something went wrong: ${esc(err && (err.message || err.code) || err)}. Try again; if it repeats, try a smaller PDF.`, true);
+    renderAll();
+  } finally {
+    state.running = false; state.abort = null;
+    $("#run").disabled = !state.file; $("#cancel").hidden = true;
+    if (Object.keys(state.pageReviews).length || state.checks.length) $("#exportRow").hidden = false;
+  }
+}
+
+/* ---------- rendering ---------- */
+function renderAll() { renderOverview(); renderRules(); renderSections(); renderPages(); renderAwards(); }
+const awardOf = id => state.report ? state.report.awards.find(x => x.id === id) : null;
+function scorePips(n, big) {
+  if (!n) return `<span class="pips${big ? " big" : ""}" aria-label="Not scored">${[1,2,3,4,5].map(() => "<i></i>").join("")}</span>`;
+  return `<span class="pips s${n}${big ? " big" : ""}" role="img" aria-label="${n} out of 5, ${SCORE[n].label}">${[1,2,3,4,5].map(i => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}<b>${n}/5</b></span>`;
+}
+function countsLine(ra) {
+  if (!ra || ra.readiness === "pending") return "";
+  if (ra.id === "inspire") return `<span class="mono muted">${(ra.cats || []).map(c => `${c.name === "Machine, Creativity & Innovation" ? "MCI" : c.name === "Team Attributes" ? "TA" : "Think"} ${c.score || "–"}`).join(" · ")}</span>`;
+  return scorePips(ra.score);
+}
+
+function renderOverview() {
+  const v = $("#v-overview");
+  const r = state.report;
+  const focus = state.meta.focus || [];
+  const tiles = AWARDS.map(a => {
+    const ra = awardOf(a.id);
+    const rd = ra ? ra.readiness : "pending";
+    return `<button class="tile ${CATCLS[a.cat]}" data-award="${a.id}" type="button">
+      <span class="hex" aria-hidden="true"></span>
+      <span class="cat">${esc(a.cat)}</span>
+      <h3>${esc(a.name)} ${focus.includes(a.id) ? '<span class="star" title="Aiming for this award">★</span>' : ""}</h3>
+      <span class="row">${pill(READY_CLS[rd], READINESS[rd])}</span>
+      ${countsLine(ra)}
+    </button>`;
+  }).join("");
+  const legend = `<div class="legend-row"><span>Every criterion is scored <b>1–5</b>: 5 = extensive, clear, visible evidence; 1 = missing.</span><span><b>Required</b> criteria scoring 1–2 make the team <b>not eligible</b> for that award. <b>Encouraged</b> criteria pull the award score up or down.</span><span><b>Inspire</b> needs a 5 (or possibly a 4) in every category: Think, Machine, Creativity &amp; Innovation, and Team Attributes.</span></div>`;
+  const counts = state.checks.reduce((m, c) => (m[c.status] = (m[c.status] || 0) + 1, m), {});
+  const ruleLine = state.checks.length
+    ? `<div class="row">${counts.fail ? pill("fail", counts.fail + " to fix") : ""}${counts.warn ? pill("warn", counts.warn + " to check") : ""}${pill("pass", (counts.pass || 0) + " passed")} <a href="#rules" class="mono" data-go="rules">See rule check</a></div>` : "";
+
+  if (!state.checks.length) {
+    v.innerHTML = `
+      <div class="panel" style="display:flex;flex-direction:column;gap:14px">
+        <h2>How the review works</h2>
+        <div class="how">
+          <div class="c-think"><span class="n">1</span><strong>Rule check</strong><p>Page count, size, file size, cover page, small text, links, prior-season content, personal info and leftover template text, checked against rule A201.</p></div>
+          <div class="c-mci"><span class="n">2</span><strong>Section by section</strong><p>Each page is checked against the elements judges expect for its section: team goals, outreach, connect, sustainability, design process, mechanisms, control and more.</p></div>
+          <div class="c-ta"><span class="n">3</span><strong>Award by award</strong><p>Every required and encouraged criterion, including lettered parts, is graded with evidence and page numbers. Eligibility and readiness are computed from those grades.</p></div>
+        </div>
+        <p class="muted">A 16-page portfolio usually takes 3 to 5 minutes. The Sections and Awards tabs already list everything judges look for, so you can use them as checklists now.</p>
+      </div>
+      <div class="panel banner"><img src="img/awards.webp" alt="" aria-hidden="true"><div><h2>Award readiness</h2>${legend}</div></div>
+      <div class="grid-awards">${tiles}</div>`;
+    return;
+  }
+  const reviewed = Object.keys(state.pageReviews).length;
+  const scored = r ? r.awards.filter(a => a.id !== "inspire" && a.score) : [];
+  const eligibleList = scored.filter(a => a.readiness !== "not_eligible");
+  const blocked = scored.filter(a => a.readiness === "not_eligible");
+  const insp = r ? r.awards.find(a => a.id === "inspire") : null;
+  const secs = state.sections || [];
+  const secMissing = secs.filter(s => s.status === "missing").length, secThin = secs.filter(s => s.status === "thin").length, secCov = secs.filter(s => s.status === "covered").length;
+  v.innerHTML = `
+    <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+      <div class="row" style="justify-content:space-between">
+        <h2>${state.meta.team ? "Team " + esc(state.meta.team) + " · " : ""}${esc(state.meta.fileName || "Portfolio")}</h2>
+        <span class="mono muted">${state.pages.length} pages · ${esc(state.meta.level || "")} · ${esc(state.meta.date || "")}</span>
+      </div>
+      ${r && r.overall.summary ? `<p class="lede">${esc(r.overall.summary)}</p>` : `<p class="muted">${state.running ? `Reviewing pages: ${reviewed} of ${Math.min(16, state.pages.length)} done. Sections and awards are scored after the pages.` : "Run the review to get written feedback."}</p>`}
+      ${r ? `<div class="stats">
+        <div class="stat"><b>${eligibleList.length}</b><span>of 7 awards eligible</span></div>
+        <div class="stat warnish"><b>${blocked.length}</b><span>blocked by a required criterion scoring 1–2</span></div>
+        ${insp && insp.readiness !== "pending" ? `<div class="stat ${insp.readiness === "inspire_no" ? "warnish" : ""}"><b>${{ inspire_strong: "Yes", inspire_possible: "Maybe", inspire_no: "Not yet" }[insp.readiness]}</b><span>Inspire contention · Think ${insp.cats[0].score || "–"} · MCI ${insp.cats[1].score || "–"} · TA ${insp.cats[2].score || "–"}</span></div>` : ""}
+        ${secs.length ? `<div class="stat"><b>${secCov}</b><span>of ${SECTIONS.length} sections covered${secThin || secMissing ? ` · ${secThin} thin · ${secMissing} missing` : ""}</span></div>` : ""}
+      </div>` : ""}
+      ${ruleLine}
+    </div>
+    <div class="panel banner"><img src="img/awards.webp" alt="" aria-hidden="true"><div><h2>Award readiness</h2>${legend}</div></div>
+    <div class="grid-awards">${tiles}</div>
+    ${r && (r.overall.topFixes || []).length ? `<div class="panel" style="display:flex;flex-direction:column;gap:12px"><h2>Highest-impact fixes</h2><ol class="fixes">${r.overall.topFixes.map(f => `<li><div><p class="t">${esc(f.title)} ${prefs(f.pages)}</p><p>${esc(f.why)}</p><p class="muted">${esc(f.how)}</p></div></li>`).join("")}</ol></div>` : ""}`;
+}
+
+function renderRules() {
+  const v = $("#v-rules");
+  const issues = state.checks.filter(c => c.status === "fail" || c.status === "warn").length;
+  $("#c-rules").textContent = state.checks.length ? (issues ? issues : "✓") : "";
+  if (!state.checks.length) { v.innerHTML = `<div class="panel empty">Upload a PDF and run the review to check it against rule A201.</div>`; return; }
+  v.innerHTML = `<div class="panel"><div class="tablewrap"><table class="rules">
+    <thead><tr><th>Result</th><th>Check</th><th>Details</th><th>Pages</th></tr></thead>
+    <tbody>${state.checks.map(c => `<tr><td>${pill(c.status, CHECK[c.status])}</td><td><strong>${esc(c.title)}</strong><br><span class="mono muted">${esc(c.rule)}</span></td><td>${esc(c.detail)}</td><td>${prefs(c.pages)}</td></tr>`).join("")}</tbody>
+  </table></div></div>
+  <p class="fine">These checks read the PDF's text layer. Text inside images can't be measured, so check those pages by eye.</p>`;
+}
+
+function renderSections() {
+  const v = $("#v-sections");
+  const secs = state.sections;
+  const gaps = secs ? secs.filter(s => s.status !== "covered").length : 0;
+  $("#c-sections").textContent = secs ? (gaps || "✓") : "";
+  const intro = `<div class="panel banner"><img src="img/upload.webp" alt="" aria-hidden="true"><div><h2>What judges expect, section by section</h2><p class="muted">Checklist adapted from the LOAD Robotics 25609 Starter Port template. Your pages don't need to match this order; what matters is that the content is there and easy to find.</p></div></div>`;
+  const pageHits = id => Object.entries(state.pageReviews).filter(([, r]) => (r.sectionIds || []).includes(id)).map(([n]) => +n);
+  v.innerHTML = intro + SECTIONS.map(def => {
+    const s = secs ? secs.find(x => x.id === def.id) : null;
+    const st = s ? s.status : "pending";
+    const feeds = def.awards.map(id => `<span class="chip">${esc(AWARD_BY_ID[id].name.replace(" Award", ""))}</span>`).join("");
+    const pages = s && s.pages.length ? s.pages : pageHits(def.id);
+    const elementRows = def.elements.map(e => {
+      // find the page checklist status for this element (best across pages)
+      let best = null;
+      Object.values(state.pageReviews).forEach(r => (r.checklist || []).forEach(c => {
+        if (c.section === def.id && c.element && c.element.slice(0, 24).toLowerCase() === e.slice(0, 24).toLowerCase()) {
+          const rank = { present: 3, thin: 2, missing: 1 }[c.status] || 0;
+          if (!best || rank > best.rank) best = { rank, status: c.status, note: c.note };
+        }
+      }));
+      const cls = best ? { present: "ok", thin: "part", missing: "missing" }[best.status] : "pending";
+      const label = best ? { present: "Present", thin: "Thin", missing: "Missing" }[best.status] : (state.sections ? "Not found" : "Not reviewed");
+      return `<li><span>${esc(e)}${best && best.note ? `<span class="fine"> · ${esc(best.note)}</span>` : ""}</span>${pill(best ? cls : (state.sections ? "missing" : "pending"), label)}</li>`;
+    }).join("");
+    return `<article class="panel section-card">
+      <div class="head"><div><h3>${esc(def.name)}</h3><div class="chips">${feeds || '<span class="fine">Identification only — no award credit</span>'}</div></div>
+        <div class="row">${s && s.priority === "high" && st !== "covered" ? pill("fail", "High priority") : ""}${pill(SEC_CLS[st], SEC_STATUS[st])} ${prefs(pages)}</div></div>
+      ${s && s.feedback ? `<p>${esc(s.feedback)}</p>` : ""}
+      ${s && s.missing.length ? `<div class="gap"><h4>Missing or thin</h4><ul class="tight">${s.missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul></div>` : ""}
+      <details${s ? "" : " open"}><summary>What judges expect here (${def.elements.length})</summary><ul class="elist">${elementRows}</ul></details>
+    </article>`;
+  }).join("");
+}
+
+function renderPages() {
+  const v = $("#v-pages");
+  $("#c-pages").textContent = state.pages.length ? state.pages.length : "";
+  if (!state.pages.length) { v.innerHTML = `<div class="panel empty">Page-by-page notes appear here once a portfolio is uploaded.</div>`; return; }
+  v.innerHTML = state.pages.map(p => {
+    const r = state.pageReviews[p.n];
+    const beyond = p.n > 16;
+    const head = `<div class="row" style="justify-content:space-between"><h3><span class="mono muted">p.${p.n}</span> ${esc(r ? r.title : (p.n === 1 ? "Cover" : beyond ? "Not read by judges" : "Waiting for review"))}</h3>${r && r.readability ? pill(r.readability.rating, "Readability: " + r.readability.rating) : beyond ? pill("fail", "Over the page limit") : ""}</div>`;
+    let body = "";
+    if (r) {
+      const cl = r.checklist || [];
+      body = `
+        ${(r.sectionIds || []).length ? `<div class="chips">${r.sectionIds.filter(id => SECTION_BY_ID[id]).map(id => `<span class="chip">${esc(SECTION_BY_ID[id].name)}</span>`).join("")}</div>` : ""}
+        <p>${esc(r.summary)}</p>
+        ${r.glance ? `<p class="glance"><b>In a 30-second skim, a judge sees:</b> ${esc(r.glance)}</p>` : ""}
+        ${(r.leftovers || []).length ? `<div class="notice err"><b>Leftover template content:</b> ${r.leftovers.map(esc).join("; ")}</div>` : ""}
+        <div class="two">
+          <div><h4>Working well</h4>${(r.strengths || []).length ? `<ul class="tight">${r.strengths.map(s => `<li>${esc(s)}</li>`).join("")}</ul>` : `<p class="muted">Nothing specific noted.</p>`}</div>
+          <div><h4>Change before your event</h4>${(r.improvements || []).length ? `<ol class="tight">${r.improvements.map(s => `<li>${esc(s)}</li>`).join("")}</ol>` : `<p class="muted">No changes suggested.</p>`}</div>
+        </div>
+        ${cl.length ? `<details><summary>Section checklist for this page (${cl.filter(c => c.status === "present").length}/${cl.length} present)</summary><ul class="elist">${cl.map(c => `<li><span>${esc(c.element)}${c.note ? `<span class="fine"> · ${esc(c.note)}</span>` : ""}</span>${pill({ present: "ok", thin: "part", missing: "missing" }[c.status] || "pending", { present: "Present", thin: "Thin", missing: "Missing" }[c.status] || c.status)}</li>`).join("")}</ul></details>` : ""}
+        ${r.readability && r.readability.note ? `<p class="fine">${esc(r.readability.note)}</p>` : ""}
+        ${(r.evidence || []).length ? `<div class="chips">${r.evidence.filter(e => AWARD_BY_ID[e.award]).map(e => `<span class="chip ${e.strength === "partial" ? "chip-thin" : ""}" title="${esc(e.note)}">${esc(AWARD_BY_ID[e.award].name.replace(" Award", ""))} ${+e.criterion}${esc(e.part || "")}</span>`).join("")}</div>` : ""}`;
+    } else if (beyond) {
+      body = `<p class="muted">Judges stop after the cover plus 15 pages, so this page won't be reviewed. Move anything important into the first 16 pages.</p>`;
+    }
+    return `<article class="panel pagecard" id="page-${p.n}"><img src="${p.thumb}" alt="Page ${p.n} thumbnail"><div class="body">${head}${body}</div></article>`;
+  }).join("");
+}
+
+function gateBanner(def, ra) {
+  if (!ra || ra.readiness === "pending") return "";
+  if (def.id === "inspire") {
+    const rows = (ra.cats || []).map(c => `<li><span>${esc(c.name)} <span class="fine">· best: ${esc(AWARD_BY_ID[c.id].name)}</span></span>${scorePips(c.score)}</li>`).join("");
+    const msg = ra.readiness === "inspire_strong" ? "<b>In contention.</b> Every award category scores 5." : ra.readiness === "inspire_possible" ? "<b>Possible contender.</b> Every category scores at least 4; lift the 4s to 5 to be a clear contender." : "<b>Not in contention yet.</b> Inspire needs a 5 (or possibly a 4) in every award category, and eligibility in each.";
+    return `<div class="gate ${ra.readiness === "inspire_strong" ? "g-ok" : ra.readiness === "inspire_possible" ? "g-risk" : "g-block"}">${msg}<ul class="elist">${rows}</ul></div>`;
+  }
+  const list = ns => ns.map(n => "criterion " + n).join(" and ");
+  const how = `Award score ${ra.score}/5 · average of criteria ${ra.avg}, capped by the weakest required criterion.`;
+  if (ra.readiness === "not_eligible") return `<div class="gate g-block"><b>Not eligible yet.</b> Required ${list(ra.blockers)} ${ra.blockers.length > 1 ? "score" : "scores"} 1–2. Every required criterion must be clearly in the portfolio (3 or higher) for the team to be considered. <span class="fine">${how}</span></div>`;
+  if (ra.weak.length) return `<div class="gate g-risk"><b>Eligible, but thin.</b> Required ${list(ra.weak)} ${ra.weak.length > 1 ? "score" : "scores"} only 3, which caps this award at 3. <span class="fine">${how}</span></div>`;
+  return `<div class="gate g-ok"><b>Eligible.</b> Every required criterion scores 4 or 5. <span class="fine">${how}</span></div>`;
+}
+
+function renderAwards() {
+  const v = $("#v-awards");
+  const focus = state.meta.focus || [];
+  const order = [...AWARDS].sort((a, b) => (focus.includes(b.id) - focus.includes(a.id)));
+  const f = state.awardFilter;
+  const list = order.filter(a => f === "all" || (f === "focus" && focus.includes(a.id)) || a.cat.startsWith(f));
+  const filterBtn = (key, label) => `<button type="button" data-f="${key}" aria-pressed="${f === key}">${label}</button>`;
+  v.innerHTML = `<div class="panel banner"><img src="img/awards.webp" alt="" aria-hidden="true"><div><h2>Judged awards, criterion by criterion</h2><p class="muted">Each criterion and lettered part is scored 1–5 for how extensive, clear and visible the evidence is. A <b>required</b> criterion scoring 1–2 blocks the award. The award score is the average of its criteria, capped by the weakest required one. Criteria come from the Competition Manual TU06 award tables.</p><div class="rubric">${[5,4,3,2,1].map(n => `<div>${scorePips(n)}<span><b>${SCORE[n].label}.</b> ${esc(SCORE[n].desc)}</span></div>`).join("")}</div></div></div><div class="filters">${filterBtn("all", "All awards")}${focus.length ? filterBtn("focus", "My target awards") : ""}${filterBtn("Machine", "Machine, Creativity & Innovation")}${filterBtn("Team", "Team Attributes")}${filterBtn("Documentation", "Think")}${filterBtn("All-around", "Inspire")}</div>` +
+    list.map(a => {
+      const ra = awardOf(a.id);
+      const rd = ra ? ra.readiness : "pending";
+      const crit = c => {
+        const rc = ra ? ra.criteria.find(x => +x.n === c.n) : null;
+        const isInsp = a.id === "inspire";
+        const st = rc && STATUS[rc.status] ? rc.status : "pending";
+        const badge = isInsp ? pill(STATUS_CLS[st], STATUS[st]) : `<span class="scorecell">${scorePips(rc && rc.score)}${rc && rc.score ? `<span class="fine">${SCORE[rc.score].label}</span>` : ""}</span>`;
+        const parts = c.parts ? `<ul class="parts">${c.parts.map(p => {
+          const rp = rc ? (rc.parts || []).find(x => x.id === p.id) : null;
+          return `<li><span class="mono">${p.id}</span><span>${esc(p.text)}${rp && rp.evidence ? `<span class="fine"> · ${esc(rp.evidence)}</span>` : ""} ${rp ? prefs(rp.pages) : ""}</span>${scorePips(rp && rp.score)}</li>`;
+        }).join("")}</ul><p class="fine">${c.rule === "all" ? "All parts are needed: the criterion takes the lowest part score." : "At least one part is needed: the criterion takes the highest part score."}</p>` : "";
+        return `<div class="crit ${c.req ? "is-req" : "is-enc"}">
+          <span class="num">${c.n}</span>
+          <div><span class="req">${c.req ? "Required · must score 3+ to be considered" : "Encouraged · should be present and evident"}${c.interviewOk ? " · can be shown in the interview" : ""}</span><p>${esc(c.text)}</p>
+            ${parts}
+            ${rc && rc.evidence ? `<p class="ev">${esc(rc.evidence)} ${prefs(rc.pages)}</p>` : ""}
+            ${rc && rc.judgeLooksFor ? `<p class="fine"><b>Judges look for:</b> ${esc(rc.judgeLooksFor)}</p>` : ""}
+            ${rc && rc.suggestion ? `<p class="sug">${esc(rc.suggestion)}</p>` : ""}
+          </div>
+          ${badge}
+        </div>`;
+      };
+      const req = a.criteria.filter(c => c.req), enc = a.criteria.filter(c => !c.req);
+      return `<article class="panel award ${CATCLS[a.cat]}" id="award-${a.id}">
+        <div class="head">
+          <div><h2>${esc(a.name)} ${focus.includes(a.id) ? '<span class="star" title="Aiming for this award">★</span>' : ""}</h2><p class="meta">${esc(a.cat)} · ${esc(a.portfolio)}</p></div>
+          <div class="row">${pill(READY_CLS[rd], READINESS[rd])}${countsLine(ra)}</div>
+        </div>
+        ${gateBanner(a, ra)}
+        ${ra && ra.headline ? `<p class="lede">${esc(ra.headline)}</p>` : ""}
+        <div><h4 class="grp">Required</h4>${req.map(crit).join("")}</div>
+        ${enc.length ? `<div><h4 class="grp">Encouraged</h4>${enc.map(crit).join("")}</div>` : ""}
+        ${ra && ra.interviewQuestions.length ? `<div><h4>Be ready for these interview questions</h4><ul class="tight">${ra.interviewQuestions.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>` : ""}
+      </article>`;
+    }).join("");
+  v.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => { state.awardFilter = b.dataset.f; renderAwards(); }));
+}
+
+/* ---------- export ---------- */
+function toMarkdown() {
+  const m = state.meta, r = state.report, L = [];
+  L.push(`# Portfolio feedback${m.team ? " — Team " + m.team : ""}`, "", `${m.fileName || ""} · ${state.pages.length} pages · ${m.level || ""} · ${m.date || ""}`, "");
+  L.push("Required criteria must all be clearly shown in the portfolio or the team is not considered for that award. Encouraged criteria should be present and evident.", "");
+  if (r) {
+    L.push("## Overview", "", r.overall.summary || "", "");
+    L.push("| Award | Score (1–5) | Status |", "|---|---|---|", ...r.awards.map(a => `| ${AWARD_BY_ID[a.id].name} | ${a.id === "inspire" ? (a.cats || []).map(c => c.score || "–").join(" / ") + " (Think / MCI / TA)" : (a.score ?? "–")} | ${READINESS[a.readiness]} |`), "");
+    if ((r.overall.topFixes || []).length) { L.push("### Highest-impact fixes", ""); r.overall.topFixes.forEach((f, i) => L.push(`${i + 1}. **${f.title}**${nums(f.pages).length ? " (p. " + nums(f.pages).join(", ") + ")" : ""} — ${f.why} ${f.how}`)); L.push(""); }
+  }
+  L.push("## Rule check (A201)", "", ...state.checks.map(c => `- **${CHECK[c.status]}: ${c.title}** (${c.rule}) — ${c.detail}${(c.pages || []).length ? " Pages: " + c.pages.join(", ") + "." : ""}`), "");
+  if (state.sections) {
+    L.push("## Sections", "");
+    state.sections.forEach(s => {
+      const def = SECTION_BY_ID[s.id];
+      L.push(`### ${def.name} — ${SEC_STATUS[s.status]}${s.pages.length ? " (p. " + s.pages.join(", ") + ")" : ""}`, "", s.feedback || "");
+      if (s.missing.length) L.push("", "Missing or thin:", ...s.missing.map(x => `- ${x}`));
+      L.push("");
+    });
+  }
+  if (r) {
+    L.push("## Awards", "");
+    r.awards.forEach(a => {
+      const def = AWARD_BY_ID[a.id];
+      L.push(`### ${def.name} — ${a.score ? a.score + "/5, " : ""}${READINESS[a.readiness]}`, "", a.headline || "", "");
+      a.criteria.forEach(c => {
+        const dc = def.criteria.find(x => x.n === +c.n);
+        L.push(`- **${c.n}. [${dc.req ? "Required" : "Encouraged"}] ${c.score ? c.score + "/5 " + SCORE[c.score].label : (STATUS[c.status] || c.status)}** — ${dc.text}`);
+        (c.parts || []).forEach(p => { const dp = (dc.parts || []).find(x => x.id === p.id); L.push(`  - ${p.id}. ${dp ? dp.text : ""}: ${p.score ? p.score + "/5" : "–"}${p.evidence ? " — " + p.evidence : ""}`); });
+        if (c.evidence) L.push(`  - Evidence: ${c.evidence}${c.pages.length ? " (p. " + c.pages.join(", ") + ")" : ""}`);
+        if (c.judgeLooksFor) L.push(`  - Judges look for: ${c.judgeLooksFor}`);
+        if (c.suggestion) L.push(`  - Suggestion: ${c.suggestion}`);
+      });
+      if (a.interviewQuestions.length) L.push("", "Likely interview questions:", ...a.interviewQuestions.map(q => `- ${q}`));
+      L.push("");
+    });
+  }
+  L.push("## Page by page", "");
+  state.pages.forEach(p => {
+    const pr = state.pageReviews[p.n];
+    if (!pr) return;
+    L.push(`### Page ${p.n}: ${pr.title}`, "", pr.summary || "");
+    if (pr.glance) L.push("", `30-second skim: ${pr.glance}`);
+    if ((pr.leftovers || []).length) L.push("", `Leftover template content: ${pr.leftovers.join("; ")}`);
+    if ((pr.strengths || []).length) L.push("", "Working well:", ...pr.strengths.map(s => `- ${s}`));
+    if ((pr.improvements || []).length) L.push("", "Change before your event:", ...pr.improvements.map((s, i) => `${i + 1}. ${s}`));
+    if (pr.readability) L.push("", `Readability: ${pr.readability.rating} — ${pr.readability.note || ""}`);
+    L.push("");
+  });
+  L.push("---", "Generated with BIOBUZZ Portfolio Review using the FTC Competition Manual TU06 award criteria and a section checklist adapted from the LOAD Robotics 25609 Starter Port. Judges make all award decisions.");
+  return L.join("\n");
+}
+$("#copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(toMarkdown()); message("Report copied. Paste it into a doc or your team chat."); }
+  catch { message("Your browser blocked copying. Try the download instead.", true); }
+});
+let downloadsNS = null;
+(async () => {
+  try { downloadsNS = window.claude && window.claude.use ? await window.claude.use("downloads") : null; } catch { downloadsNS = null; }
+  if (downloadsNS) $("#dl").hidden = false;
+})();
+$("#dl").addEventListener("click", async () => {
+  if (!downloadsNS) return;
+  const name = `portfolio-feedback${state.meta.team ? "-" + state.meta.team : ""}.md`;
+  try { await downloadsNS.save({ filename: name, data: toMarkdown() }); }
+  catch {
+    try { await downloadsNS.save({ filename: name, data: new Blob([toMarkdown()], { type: "text/markdown" }) }); }
+    catch { message("The download didn't go through. Use Copy report instead.", true); }
+  }
+});
+
+/* ---------- restore last report in this browser ---------- */
+(function restore() {
+  const last = store.get("pr:last");
+  if (last && last.report && last.report.awards && last.report.awards[0] && "cats" in last.report.awards[0]) {
+    state.meta = last.meta || {}; state.checks = last.checks || []; state.pageReviews = last.pageReviews || {}; state.report = last.report; state.sections = last.sections || null;
+    state.pages = (last.pages || []).map(p => ({ ...p, thumb: "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="259"><rect width="200" height="259" fill="#eef0f5"/></svg>') }));
+    (state.meta.focus || []).forEach(id => { const el = document.getElementById("f-" + id); if (el) el.checked = true; });
+    if (state.meta.team) $("#team").value = state.meta.team;
+    $("#exportRow").hidden = false;
+    message(`Showing your last review (${esc(state.meta.fileName || "portfolio")}, ${esc(state.meta.date || "")}). Upload a new version to review it again.`);
+  }
+  renderAll();
+})();
+
+</script>
+</body>
+</html>
