@@ -265,6 +265,10 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
       </label>
       <input type="file" id="file" accept="application/pdf,.pdf">
 
+      <div class="field" id="codeField" hidden>
+        <label for="code">Team access code</label>
+        <input type="password" id="code" autocomplete="off" placeholder="From Largo Robotics">
+      </div>
       <div class="field">
         <label for="team">Team number</label>
         <input type="text" id="team" placeholder="e.g. 12345" inputmode="numeric" autocomplete="off">
@@ -298,7 +302,7 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
         <button class="btn" id="copy">Copy report</button>
         <button class="btn" id="dl" hidden>Download .md</button>
       </div>
-      <p class="fine">Claude reads your pages and writes the feedback. Judges decide awards, so treat this as a second reader before your event. Your PDF is processed in this browser and sent only to Claude for the review.</p>
+      <p class="fine">Claude reads your pages and writes the feedback. Judges decide awards, so treat this as a second reader before your event. Your PDF is read in this browser; page images and text are sent to Claude (Anthropic) for the review and aren't saved by this site.</p>
     </div>
   </aside>
 
@@ -318,6 +322,7 @@ details summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var
   </main>
 </div>
 
+<script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
 <script>
@@ -604,10 +609,44 @@ function ruleChecks(pages, file, team) {
 }
 
 /* ---------- Claude ---------- */
+/* Two ways to reach Claude:
+   1. Inside claude.ai (artifact): the built-in "sample" capability.
+   2. Anywhere else (GitHub Pages, your website): your own review server, set in config.js.
+      The server keeps the Anthropic API key; the browser never sees it. */
+const CFG = window.PORTFOLIO_REVIEW_CONFIG || {};
+const IN_CLAUDE = !!(window.claude && window.claude.use);
+const blobToBase64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); });
+function accessCode() { const el = $("#code"); return el ? el.value.trim() : ""; }
+function remoteSample() {
+  const base = String(CFG.apiUrl).replace(/\/+$/, "");
+  const call = async (prompt, opts = {}) => {
+    const images = await Promise.all((opts.images || []).map(blobToBase64));
+    let res;
+    try {
+      res = await fetch(base + "/review", { method: "POST", signal: opts.signal, headers: { "content-type": "application/json", "x-access-code": accessCode() }, body: JSON.stringify({ prompt, images, tier: opts.modelTier || "default" }) });
+    } catch (e) { if (opts.signal && opts.signal.aborted) throw e; throw { code: "network", message: "Couldn't reach the review server. Check your internet connection and try again." }; }
+    let data = {}; try { data = await res.json(); } catch {}
+    if (res.status === 401) throw { code: "bad_code", message: "That access code wasn't accepted. Check it with Largo Robotics and try again." };
+    if (res.status === 429) throw { code: "rate_limited", message: data.error || "The review server is busy or your daily limit is used up. Try again later." };
+    if (!res.ok) throw { code: "server", message: data.error || `The review server returned an error (${res.status}).` };
+    return { text: data.text || "", truncated: !!data.truncated };
+  };
+  call.limits = async () => ({ images: CFG.maxImagesPerCall || 3 });
+  return call;
+}
 let samplePromise = null;
 function getSample() {
-  if (!samplePromise) samplePromise = (window.claude && window.claude.use) ? window.claude.use("sample").catch(() => null) : Promise.resolve(null);
+  if (!samplePromise) samplePromise = (async () => {
+    if (IN_CLAUDE) { try { const s = await window.claude.use("sample"); if (s) return s; } catch {} }
+    if (CFG.apiUrl) return remoteSample();
+    return null;
+  })();
   return samplePromise;
+}
+if (!IN_CLAUDE && CFG.apiUrl && CFG.requireAccessCode !== false) {
+  $("#codeField").hidden = false;
+  const saved = store.get("pr:code"); if (saved) $("#code").value = saved;
+  $("#code").addEventListener("change", () => store.set("pr:code", $("#code").value.trim()));
 }
 function parseJSON(text) {
   if (!text) throw new Error("Empty answer");
@@ -855,6 +894,8 @@ $("#cancel").addEventListener("click", () => { if (state.abort) state.abort.abor
 
 async function run() {
   if (!state.file || state.running) return;
+  if (!$("#codeField").hidden && !accessCode()) { message("Enter your team access code first. Ask Largo Robotics if you don't have one.", true); $("#code").focus(); return; }
+  if (!$("#codeField").hidden) store.set("pr:code", accessCode());
   state.running = true; state.abort = new AbortController();
   $("#run").disabled = true; $("#cancel").hidden = false; $("#progress").hidden = false; $("#exportRow").hidden = true;
   message("");
@@ -878,7 +919,7 @@ async function run() {
     const sample = await getSample();
     if (!sample) {
       stepState("pages", "fail");
-      message("The rule check is done, but this view can't reach Claude for the written feedback. Open this page on claude.ai while signed in, then run the review again.", true);
+      message(IN_CLAUDE ? "The rule check is done, but this view can't reach Claude for the written feedback. Open this page on claude.ai while signed in, then run the review again." : "The rule check is done. Written feedback isn't set up on this copy of the page yet (no review server in config.js).", true);
       return;
     }
     let maxImages = 0;
@@ -902,7 +943,7 @@ async function run() {
         const res = await askJSON(sample, pageBatchPrompt(b, ctx, withImages), opts);
         for (const r of res.pages || []) if (Number.isFinite(+r.page)) state.pageReviews[+r.page] = r;
       } catch (err) {
-        if (state.abort.signal.aborted || (err && err.code === "not_granted")) throw err;
+        if (state.abort.signal.aborted || (err && ["not_granted", "bad_code", "network"].includes(err.code))) throw err;
         failed.push(...b.map(p => p.n));
       }
       done += b.length;
@@ -937,6 +978,7 @@ async function run() {
     const active = document.querySelector(".step.active"); if (active) active.classList.replace("active", "fail");
     if (state.abort && state.abort.signal.aborted) message("Review stopped. Anything finished so far is still shown.");
     else if (err && err.code === "not_granted") message("Claude access wasn't granted for this page, so only the rule check ran. Allow access when prompted and run the review again.", true);
+    else if (err && (err.code === "bad_code" || err.code === "network" || err.code === "server")) message(esc(err.message), true);
     else if (err && err.code === "rate_limited") message("Claude is busy right now. Wait a minute, then run the review again.", true);
     else message(`Something went wrong: ${esc(err && (err.message || err.code) || err)}. Try again; if it repeats, try a smaller PDF.`, true);
     renderAll();
@@ -1218,7 +1260,8 @@ $("#copy").addEventListener("click", async () => {
 });
 let downloadsNS = null;
 (async () => {
-  try { downloadsNS = window.claude && window.claude.use ? await window.claude.use("downloads") : null; } catch { downloadsNS = null; }
+  if (IN_CLAUDE) { try { downloadsNS = await window.claude.use("downloads"); } catch { downloadsNS = null; } }
+  else downloadsNS = { save: async ({ filename, data }) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/markdown" })); a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); } };
   if (downloadsNS) $("#dl").hidden = false;
 })();
 $("#dl").addEventListener("click", async () => {
